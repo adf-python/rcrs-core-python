@@ -16,8 +16,8 @@ class Config:
         self.violated_constraints: Set[ConfigConstraint] = set()
     
     def get_value(self, key: str) -> str | None:
-        if key in self._data:
-            return self._data[key]
+        if key in self.data:
+            return self.data[key]
         return None
     
     def get_float_value(self, key):
