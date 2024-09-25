@@ -1,11 +1,10 @@
 from rcrs_core.connection import URN
 from rcrs_core.entities.entity import Entity
-from rcrs_core.properties.intProperty import IntProperty
 from rcrs_core.properties.entityIDProperty import EntityIDProperty
 from rcrs_core.properties.intArrayProperty import IntArrayProperty
+from rcrs_core.properties.intProperty import IntProperty
 from rcrs_core.worldmodel.entityID import EntityID
 from rcrs_core.worldmodel.worldmodel import WorldModel
-from abc import ABCMeta
 
 
 class Human(Entity):
@@ -21,9 +20,11 @@ class Human(Entity):
         self.buriedness = IntProperty(URN.Property.BURIEDNESS)
 
         self.register_properties(
-            [self.travel_distance, self.position, self.position_history])
+            [self.travel_distance, self.position, self.position_history]
+        )
         self.register_properties(
-            [self.direction, self.stamina, self.hp, self.damage, self.buriedness])
+            [self.direction, self.stamina, self.hp, self.damage, self.buriedness]
+        )
 
     def get_location(self, world_model: WorldModel):
         pass
@@ -31,7 +32,6 @@ class Human(Entity):
     def set_entity(self, properties: dict):
         super().set_entity(properties)
         for key, values in properties.items():
-
             if key == URN.Property.POSITION:
                 self.position.set_value(values)
 
@@ -57,26 +57,25 @@ class Human(Entity):
                 self.travel_distance.set_value(values)
 
     def get_property(self, urn):
-
-        if(urn == URN.Property.POSITION):
+        if urn == URN.Property.POSITION:
             return self.position
-        elif(urn == URN.Property.POSITION_HISTORY):
+        elif urn == URN.Property.POSITION_HISTORY:
             return self.position_history
-        elif(urn == URN.Property.DIRECTION):
+        elif urn == URN.Property.DIRECTION:
             return self.direction
-        elif(urn == URN.Property.STAMINA):
+        elif urn == URN.Property.STAMINA:
             return self.stamina
-        elif(urn == URN.Property.HP):
+        elif urn == URN.Property.HP:
             return self.hp
-        elif(urn == URN.Property.X):
+        elif urn == URN.Property.X:
             return self.x
-        elif(urn == URN.Property.Y):
+        elif urn == URN.Property.Y:
             return self.y
-        elif(urn == URN.Property.DAMAGE):
+        elif urn == URN.Property.DAMAGE:
             return self.damage
-        elif(urn == URN.Property.BURIEDNESS):
+        elif urn == URN.Property.BURIEDNESS:
             return self.buriedness
-        elif(urn == URN.Property.TRAVEL_DISTANCE):
+        elif urn == URN.Property.TRAVEL_DISTANCE:
             return self.travel_distance
         else:
             return super().get_property(urn)
@@ -99,10 +98,10 @@ class Human(Entity):
     def set_y(self, value):
         self.y.set_value(value)
 
-    def get_position_property(self) -> EntityID:
+    def get_position_property(self) -> EntityIDProperty:
         return self.position
 
-    def get_position(self) -> int:
+    def get_position(self) -> EntityID:
         return self.position.get_value()
 
     def set_position(self, value):
