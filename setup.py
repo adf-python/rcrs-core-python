@@ -8,5 +8,5 @@ setup(
     description="RoboCup Rescue Simulation(RCRS Agent Development Library)",
     url="https://github.com/roborescue/rcrs-core-python",
     packages=find_packages(),
-    install_requires=["protobuf==5.28.*", "rtree"],
+    install_requires=["protobuf>=5.28", "rtree"],
 )
