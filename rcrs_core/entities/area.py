@@ -1,19 +1,21 @@
-from typing import List
+from typing import Optional
+
 from rcrs_core.connection import URN
+from rcrs_core.entities.edge import Edge
 from rcrs_core.entities.entity import Entity
 from rcrs_core.properties.edgeListProperty import EdgeListProperty
 from rcrs_core.properties.entityIDListProperty import EntityIDListProperty
+from rcrs_core.worldmodel.entityID import EntityID
 
 
 class Area(Entity):
-
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: EntityID):
         super().__init__(entity_id)
         self.edges = EdgeListProperty(URN.Property.EDGES)
         self.blockades = EntityIDListProperty(URN.Property.BLOCKADES)
-        self.neighbours = None
+        self.neighbours: Optional[list[EntityID]] = None
         self.shape = None
-        self.apexList = []
+        self.apexes: list[int] = []
         self.register_properties([self.edges, self.blockades])
 
     def set_entity(self, properties):
@@ -31,7 +33,7 @@ class Area(Entity):
         if self.neighbours is None:
             self.neighbours = []
             for edge in self.edges.get_value():
-                if edge.is_passable():
+                if edge.is_passable() and edge.get_neighbour() is not None:
                     self.neighbours.append(edge.get_neighbour())
         return self.neighbours
 
@@ -42,14 +44,13 @@ class Area(Entity):
         return None
 
     def get_property(self, urn):
-
-        if(urn == URN.Property.X):
+        if urn == URN.Property.X:
             return self.x
-        elif(urn == URN.Property.Y):
+        elif urn == URN.Property.Y:
             return self.y
-        elif(urn == URN.Property.EDGES):
+        elif urn == URN.Property.EDGES:
             return self.edges
-        elif(urn == URN.Property.BLOCKADES):
+        elif urn == URN.Property.BLOCKADES:
             return self.blockades
         else:
             return super().get_property(urn)
@@ -57,14 +58,21 @@ class Area(Entity):
     def get_edges_property(self):
         return self.edges
 
-    def get_edges(self) -> List[Entity]:
+    def get_edges(self):
         return self.edges.get_value()
 
     def set_edges(self, value):
         self.edges.set_edges(value)
 
-    def add_edge(self, edge):
+    def add_edge(self, edge: Edge):
         self.edges.add_edge(edge)
+
+    def get_apexes(self):
+        if self.apexes == []:
+            for edge in self.edges.get_value():
+                self.apexes.append(edge.get_start_x())
+                self.apexes.append(edge.get_start_y())
+        return self.apexes
 
     def get_blockades_property(self):
         return self.blockades
@@ -76,4 +84,4 @@ class Area(Entity):
         self.blockades.set_value(value)
 
     def get_shape(self):
-        return None
+        return self.shape
