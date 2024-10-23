@@ -39,7 +39,7 @@ class Human(Entity):
         super().set_entity(properties)
         for key, values in properties.items():
             if key == URN.Property.POSITION:
-                self.position.set_value(values)
+                self.position.set_value(EntityID(values))
 
             elif key == URN.Property.POSITION_HISTORY:
                 self.position_history.set_value(values)
