@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 
 from rcrs_core.connection import URN
 from rcrs_core.entities.entity import Entity
+from rcrs_core.worldmodel.entityID import EntityID
 from rcrs_core.properties.entityIDProperty import EntityIDProperty
 from rcrs_core.properties.intArrayProperty import IntArrayProperty
 from rcrs_core.properties.intProperty import IntProperty
 
 if TYPE_CHECKING:
-    from rcrs_core.worldmodel.entityID import EntityID
     from rcrs_core.worldmodel.worldmodel import WorldModel
 
 
