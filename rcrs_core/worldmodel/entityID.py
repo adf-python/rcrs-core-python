@@ -21,6 +21,6 @@ class EntityID:
 
     def equals(self, o):
         if isinstance(o, EntityID):
-            return self.id == EntityID(o).id
+            return self.id == o.id
         
         return False
