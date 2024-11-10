@@ -6,7 +6,7 @@ from rcrs_core.properties.intProperty import IntProperty
 class World(Entity):
     urn = URN.Entity.WORLD
 
-    def __init__(self, entity_id) -> None:
+    def __init__(self, entity_id: int) -> None:
         super().__init__(entity_id)
 
         self.start_time = IntProperty(URN.Property.START_TIME)
@@ -35,6 +35,6 @@ class World(Entity):
 
             elif key == URN.Property.WIND_DIRECTION:
                 self.wind_direction.set_value(values)
-    
+
     def copy_impl(self):
         return World(self.get_id())

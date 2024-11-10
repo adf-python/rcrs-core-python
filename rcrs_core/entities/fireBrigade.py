@@ -6,7 +6,7 @@ from rcrs_core.properties.intProperty import IntProperty
 class FireBrigadeEntity(Human):
     urn = URN.Entity.FIRE_BRIGADE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.water = IntProperty(URN.Property.WATER_QUANTITY)
 

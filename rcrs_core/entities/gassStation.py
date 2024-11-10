@@ -5,7 +5,7 @@ from rcrs_core.entities.building import Building
 class GasStation(Building):
     urn = URN.Entity.GAS_STATION
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
 
     def copy_impl(self):

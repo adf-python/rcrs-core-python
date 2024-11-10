@@ -1,14 +1,12 @@
 from rcrs_core.connection import URN
-from rcrs_core.entities.edge import Edge
 from rcrs_core.entities.area import Area
 from rcrs_core.properties.intProperty import IntProperty
-
 
 
 class Building(Area):
     urn = URN.Entity.BUILDING
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.floors = IntProperty(URN.Property.FLOORS)
         self.ignition = IntProperty(URN.Property.IGNITION)
@@ -23,11 +21,12 @@ class Building(Area):
         self.capacity = IntProperty(URN.Property.CAPACITY)
 
         self.register_properties(
-            [self.floors, self.ignition, self.fieryness, self.brokenness])
+            [self.floors, self.ignition, self.fieryness, self.brokenness]
+        )
+        self.register_properties([self.attributes, self.ground_area, self.total_area])
         self.register_properties(
-            [self.attributes, self.ground_area, self.total_area])
-        self.register_properties(
-            [self.capacity, self.temperature, self.importance, self.building_code])
+            [self.capacity, self.temperature, self.importance, self.building_code]
+        )
 
     def is__fiery(self):
         fieryness_value = self.fieryness.get_value()
@@ -77,26 +76,25 @@ class Building(Area):
         return "Building"
 
     def get_property(self, urn):
-
-        if(urn == URN.Property.FLOORS):
+        if urn == URN.Property.FLOORS:
             return self.floors
-        elif(urn == URN.Property.IGNITION):
+        elif urn == URN.Property.IGNITION:
             return self.ignition
-        elif(urn == URN.Property.FIERYNESS):
+        elif urn == URN.Property.FIERYNESS:
             return self.fieryness
-        elif(urn == URN.Property.BROKENNESS):
+        elif urn == URN.Property.BROKENNESS:
             return self.brokenness
-        elif(urn == URN.Property.BUILDING_CODE):
+        elif urn == URN.Property.BUILDING_CODE:
             return self.building_code
-        elif(urn == URN.Property.BUILDING_ATTRIBUTES):
+        elif urn == URN.Property.BUILDING_ATTRIBUTES:
             return self.attributes
-        elif(urn == URN.Property.BUILDING_AREA_GROUND):
+        elif urn == URN.Property.BUILDING_AREA_GROUND:
             return self.ground_area
-        elif(urn == URN.Property.BUILDING_AREA_TOTAL):
+        elif urn == URN.Property.BUILDING_AREA_TOTAL:
             return self.total_area
-        elif(urn == URN.Property.TEMPERATURE):
+        elif urn == URN.Property.TEMPERATURE:
             return self.temperature
-        elif(urn == URN.Property.IMPORTANCE):
+        elif urn == URN.Property.IMPORTANCE:
             return self.importance
         else:
             return super().get_property(urn)

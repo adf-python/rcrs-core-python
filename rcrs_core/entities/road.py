@@ -5,7 +5,7 @@ from rcrs_core.entities.area import Area
 class Road(Area):
     urn = URN.Entity.ROAD
 
-    def __init__(self, entity_id) -> None:
+    def __init__(self, entity_id: int) -> None:
         super().__init__(entity_id)
 
     def set_entity(self, properties) -> None:

@@ -5,7 +5,7 @@ from rcrs_core.entities.building import Building
 class PoliceOfficeEntity(Building):
     urn = URN.Entity.POLICE_OFFICE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         Building.__init__(self, entity_id)
 
     def copy_impl(self):

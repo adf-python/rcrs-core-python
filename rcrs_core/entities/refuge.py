@@ -6,7 +6,7 @@ from rcrs_core.properties.intProperty import IntProperty
 class Refuge(Building):
     urn = URN.Entity.REFUGE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.bed_capacity = IntProperty(URN.Property.BEDCAPACITY)
         self.occupied_beds = IntProperty(URN.Property.OCCUPIEDBEDS)
@@ -14,7 +14,6 @@ class Refuge(Building):
         self.waiting_list_size = IntProperty(URN.Property.WAITINGLISTSIZE)
 
     def set_entity(self, properties):
-
         super().set_entity(properties)
 
         for key, values in properties.items():
@@ -31,8 +30,7 @@ class Refuge(Building):
                 self.waiting_list_size.set_value(values)
 
             self.register_properties([self.bed_capacity, self.occupied_beds])
-            self.register_properties(
-                [self.refill_capacity, self.waiting_list_size])
+            self.register_properties([self.refill_capacity, self.waiting_list_size])
 
     def copy_impl(self):
         return Refuge(self.get_id())
@@ -41,14 +39,13 @@ class Refuge(Building):
         return "Refuge"
 
     def get_property(self, urn):
-
-        if(urn == URN.Property.BEDCAPACITY):
+        if urn == URN.Property.BEDCAPACITY:
             return self.bed_capacity
-        elif(urn == URN.Property.OCCUPIEDBEDS):
+        elif urn == URN.Property.OCCUPIEDBEDS:
             return self.occupied_beds
-        elif(urn == URN.Property.REFILLCAPACITY):
+        elif urn == URN.Property.REFILLCAPACITY:
             return self.refill_capacity
-        elif(urn == URN.Property.WAITINGLISTSIZE):
+        elif urn == URN.Property.WAITINGLISTSIZE:
             return self.waiting_list_size
         else:
             return super().get_property(urn)

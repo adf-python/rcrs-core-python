@@ -3,21 +3,19 @@ from rcrs_core.entities.entity import Entity
 from rcrs_core.properties.entityIDProperty import EntityIDProperty
 from rcrs_core.properties.intArrayProperty import IntArrayProperty
 from rcrs_core.properties.intProperty import IntProperty
-from rcrs_core.connection import URN
 
 
 class Blockade(Entity):
     urn = URN.Entity.BLOCKADE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.position = EntityIDProperty(URN.Property.POSITION)
         self.apexes = IntArrayProperty(URN.Property.APEXES)
         self.repair_cost = IntProperty(URN.Property.REPAIR_COST)
         self.shape = None
 
-        self.register_properties(
-            [self.position, self.apexes, self.repair_cost])
+        self.register_properties([self.position, self.apexes, self.repair_cost])
 
     def get_entity_name(self):
         return "Blockade"
@@ -39,16 +37,15 @@ class Blockade(Entity):
         return Blockade(self.get_id())
 
     def get_property(self, urn):
-
-        if(urn == URN.Property.X):
+        if urn == URN.Property.X:
             return self.x
-        elif(urn == URN.Property.Y):
+        elif urn == URN.Property.Y:
             return self.y
-        elif(urn == URN.Property.POSITION):
+        elif urn == URN.Property.POSITION:
             return self.position
-        elif(urn == URN.Property.APEXES):
+        elif urn == URN.Property.APEXES:
             return self.apexes
-        elif(urn == URN.Property.REPAIR_COST):
+        elif urn == URN.Property.REPAIR_COST:
             return self.repair_cost
         else:
             return super().get_property(urn)

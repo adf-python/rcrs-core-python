@@ -1,11 +1,12 @@
+from abc import ABC
+
 from rcrs_core.connection import URN
-from rcrs_core.worldmodel.entityID import EntityID
 from rcrs_core.properties.intProperty import IntProperty
-from abc import ABC, abstractmethod
+from rcrs_core.worldmodel.entityID import EntityID
 
 
 class Entity(ABC):
-    def __init__(self, _entity_id):
+    def __init__(self, _entity_id: int):
         self.entity_id = EntityID(_entity_id)
         self.x = IntProperty(URN.Property.X)
         self.y = IntProperty(URN.Property.Y)
@@ -48,13 +49,13 @@ class Entity(ABC):
 
     def get_property(self, property_urn):
         return self.properties.get(property_urn)
-    
+
     def get_location(self):
         if self.x.is_defined() and self.y.is_defined():
             return self.x.get_value(), self.y.get_value()
         else:
             return None, None
-    
+
     # y property
     def get_x_property(self):
         return self.x
@@ -74,7 +75,3 @@ class Entity(ABC):
 
     def set_y(self, value):
         self.y.set_value(value)
-
-
-    
-

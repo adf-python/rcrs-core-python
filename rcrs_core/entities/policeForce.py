@@ -5,7 +5,7 @@ from rcrs_core.entities.human import Human
 class PoliceForceEntity(Human):
     urn = URN.Entity.POLICE_FORCE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
 
     def copy_impl(self):

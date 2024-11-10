@@ -5,7 +5,7 @@ from rcrs_core.entities.road import Road
 class Hydrant(Road):
     urn = URN.Entity.HYDRANT
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
 
     def copy_impl(self):
@@ -13,6 +13,6 @@ class Hydrant(Road):
 
     def get_entity_name(self):
         return "Hydrant"
-    
+
     def set_entity(self, properties):
         super().set_entity(properties)

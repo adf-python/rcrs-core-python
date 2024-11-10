@@ -9,7 +9,7 @@ from rcrs_core.worldmodel.entityID import EntityID
 
 
 class Area(Entity):
-    def __init__(self, entity_id: EntityID):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.edges = EdgeListProperty(URN.Property.EDGES)
         self.blockades = EntityIDListProperty(URN.Property.BLOCKADES)

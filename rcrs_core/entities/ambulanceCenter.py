@@ -1,10 +1,11 @@
-from rcrs_core.entities.building import Building
 from rcrs_core.connection import URN
+from rcrs_core.entities.building import Building
+
 
 class AmbulanceCentreEntity(Building):
     urn = URN.Entity.AMBULANCE_CENTRE
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         pass
 

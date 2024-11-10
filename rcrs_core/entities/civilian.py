@@ -1,11 +1,11 @@
-from rcrs_core.entities.human import Human
 from rcrs_core.connection import URN
+from rcrs_core.entities.human import Human
 
 
 class Civilian(Human):
     urn = URN.Entity.CIVILIAN
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
 
     def copy_impl(self):

@@ -4,17 +4,17 @@ from typing import TYPE_CHECKING
 
 from rcrs_core.connection import URN
 from rcrs_core.entities.entity import Entity
-from rcrs_core.worldmodel.entityID import EntityID
 from rcrs_core.properties.entityIDProperty import EntityIDProperty
 from rcrs_core.properties.intArrayProperty import IntArrayProperty
 from rcrs_core.properties.intProperty import IntProperty
+from rcrs_core.worldmodel.entityID import EntityID
 
 if TYPE_CHECKING:
     from rcrs_core.worldmodel.worldmodel import WorldModel
 
 
 class Human(Entity):
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: int):
         super().__init__(entity_id)
         self.travel_distance = IntProperty(URN.Property.TRAVEL_DISTANCE)
         self.position = EntityIDProperty(URN.Property.POSITION)
