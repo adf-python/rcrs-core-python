@@ -1,10 +1,10 @@
 from rcrs_core.connection import URN
-from rcrs_core.properties.intProperty import IntProperty
-from rcrs_core.properties.intArrayProperty import IntArrayProperty
 from rcrs_core.properties.booleanProperty import BooleanProperty
 from rcrs_core.properties.edgeListProperty import EdgeListProperty
 from rcrs_core.properties.entityIDListProperty import EntityIDListProperty
 from rcrs_core.properties.entityIDProperty import EntityIDProperty
+from rcrs_core.properties.intArrayProperty import IntArrayProperty
+from rcrs_core.properties.intProperty import IntProperty
 
 
 class StandardPropertyFactory:

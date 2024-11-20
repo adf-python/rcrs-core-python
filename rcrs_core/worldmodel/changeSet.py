@@ -1,8 +1,5 @@
-
-
 class ChangeSet:
     def __init__(self, _change_set=None):
-
         self.changed = {}
         self.deleted = set()
         self.entity_urns = {}
@@ -11,7 +8,6 @@ class ChangeSet:
             self.merge(_change_set)
 
     def add_change(self, entity_id, entity_urn, property):
-
         if entity_id in self.deleted:
             return
 
@@ -56,8 +52,7 @@ class ChangeSet:
             _entity_urn = _change_set.get_entity_urn(_entity_id)
             _property_dict = _change_set.changed[_entity_id]
             for _property_urn in _property_dict:
-                self.add_change(_entity_id, _entity_urn,
-                                _property_dict[_property_urn])
+                self.add_change(_entity_id, _entity_urn, _property_dict[_property_urn])
 
         for _entity_id in _change_set.deleted:
             self.entity_deleted(_entity_id)
