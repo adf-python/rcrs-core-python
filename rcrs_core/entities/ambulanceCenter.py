@@ -2,7 +2,7 @@ from rcrs_core.connection import URN
 from rcrs_core.entities.building import Building
 
 
-class AmbulanceCentreEntity(Building):
+class AmbulanceCentre(Building):
     urn = URN.Entity.AMBULANCE_CENTRE
 
     def __init__(self, entity_id: int):
@@ -16,4 +16,4 @@ class AmbulanceCentreEntity(Building):
         return "Ambulance Centre"
 
     def copy_impl(self):
-        return AmbulanceCentreEntity(self.get_id())
+        return AmbulanceCentre(self.get_id())

@@ -1,14 +1,11 @@
-from rcrs_core.commands.Command import Command
-from rcrs_core.connection import RCRSProto_pb2
+from rcrs_core.connection import URN, RCRSProto_pb2
+from rcrs_core.messages.message import Message
 from rcrs_core.properties.standardPropertyFactory import StandardPropertyFactory
 from rcrs_core.worldmodel.changeSet import ChangeSet
 from rcrs_core.worldmodel.entityID import EntityID
-from rcrs_core.messages.message import Message
-from rcrs_core.connection import URN
 
 
 class KASense(Message):
-
     def __init__(self, data: RCRSProto_pb2):
         super().__init__(URN.ControlMSG.KA_SENSE)
         self.agent_id = None
@@ -29,7 +26,7 @@ class KASense(Message):
             for p in change.properties:
                 property_urn = URN.MAP[p.urn]
                 _property = StandardPropertyFactory.make_property(property_urn)
-                value = getattr(p, p.WhichOneof('value')) if p.defined else None
+                value = getattr(p, p.WhichOneof("value")) if p.defined else None
                 if _property is not None and value is not None:
                     _property.set_fields(value)
                     self.change_set.add_change(entity_id, change.urn, _property)

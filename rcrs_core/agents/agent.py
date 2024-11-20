@@ -1,48 +1,46 @@
 import random
 import sys
-from rcrs_core.connection.URN import Entity
-from rcrs_core.commands.AKSubscribe import AKSubscribe
+from abc import ABC, abstractmethod
+
 from rcrs_core.commands.AKClear import AKClear
 from rcrs_core.commands.AKClearArea import AKClearArea
 from rcrs_core.commands.AKLoad import AKLoad
 from rcrs_core.commands.AKMove import AKMove
 from rcrs_core.commands.AKRescue import AKRescue
-from rcrs_core.commands.AKUnload import AKUnload
+from rcrs_core.commands.AKRest import AKRest
 from rcrs_core.commands.AKSay import AKSay
 from rcrs_core.commands.AKSpeak import AKSpeak
+from rcrs_core.commands.AKSubscribe import AKSubscribe
 from rcrs_core.commands.AKTell import AKTell
-
+from rcrs_core.commands.AKUnload import AKUnload
+from rcrs_core.connection.URN import Entity
+from rcrs_core.entities.human import Human
+from rcrs_core.log.logger import Logger
 from rcrs_core.messages.AKAcknowledge import AKAcknowledge
-from rcrs_core.messages.KAConnectOK import KAConnectOK
-from rcrs_core.messages.KAConnectError import KAConnectError
-from rcrs_core.messages.KASense import KASense
 from rcrs_core.messages.AKConnect import AKConnect
+from rcrs_core.messages.controlMessageFactory import ControlMessageFactory
+from rcrs_core.messages.KAConnectError import KAConnectError
+from rcrs_core.messages.KAConnectOK import KAConnectOK
+from rcrs_core.messages.KASense import KASense
 from rcrs_core.worldmodel.entityID import EntityID
 from rcrs_core.worldmodel.worldmodel import WorldModel
-from rcrs_core.log.logger import Logger
-from rcrs_core.messages.controlMessageFactory import ControlMessageFactory
-from abc import ABC, abstractmethod
-
-from rcrs_core.commands.AKRest import AKRest
-from rcrs_core.entities.human import Human
 
 
 class Agent(ABC):
-
     def __init__(self, pre):
-        print('agent created .... ')
-        self.name = 'Abstract_Agent'
+        print("agent created .... ")
+        self.name = "Abstract_Agent"
         self.connect_request_id = None
         self.world_model = WorldModel()
         self.config = None
         self.random = None
         self.agent_id = None
         self.precompute_flag = pre
-    
+
     @abstractmethod
     def precompute(self):
         pass
-    
+
     @abstractmethod
     def think(self, time, change_set, hear):
         pass
@@ -59,10 +57,9 @@ class Agent(ABC):
     def start_up(self, request_id):
         ak_connect = AKConnect()
         self.send_msg(ak_connect.write(request_id, self))
-    
-    def post_connect(self):
-            self.Log = Logger(self.get_name(), self.get_id())
 
+    def post_connect(self):
+        self.Log = Logger(self.get_name(), self.get_id())
 
     def message_received(self, msg):
         c_msg = ControlMessageFactory().make_message(msg)
@@ -75,7 +72,7 @@ class Agent(ABC):
 
     def handle_connect_error(self, msg):
         Log = Logger(self.get_name())
-        Log.warning('failed {0} : {1}'.format(msg.request_id, msg.reason))
+        Log.warning("failed {0} : {1}".format(msg.request_id, msg.reason))
         sys.exit(1)
 
     def handle_connect_ok(self, msg):
@@ -85,7 +82,7 @@ class Agent(ABC):
         self.sendAKAcknowledge(msg.request_id)
         self.post_connect()
         if self.precompute_flag:
-            print('self.precompute_flag: ', self.precompute_flag)
+            print("self.precompute_flag: ", self.precompute_flag)
             self.precompute()
 
     def sendAKAcknowledge(self, request_id):
@@ -99,7 +96,7 @@ class Agent(ABC):
         hear = msg.hear
 
         if _id != self.get_id():
-            self.Log.warning('agent recieved a message which not blongs to him')
+            self.Log.warning("agent recieved a message which not blongs to him")
             return
 
         self.world_model.merge(change_set)
@@ -147,7 +144,7 @@ class Agent(ABC):
         cmd = AKClearArea(self.get_id(), time, x, y)
         msg = cmd.prepare_cmd()
         self.send_msg(msg)
-    
+
     def send_load(self, time, target):
         cmd = AKLoad(self.get_id(), time, target)
         msg = cmd.prepare_cmd()
@@ -172,7 +169,7 @@ class Agent(ABC):
         cmd = AKSay(self.get_id(), time_step, message)
         msg = cmd.prepare_cmd()
         self.send_msg(msg)
-    
+
     def send_speak(self, time_step: int, message: str, channel: int):
         cmd = AKSpeak(self.get_id(), time_step, message, channel)
         msg = cmd.prepare_cmd()
@@ -182,14 +179,13 @@ class Agent(ABC):
         cmd = AKSubscribe(self.get_id(), time, channel)
         msg = cmd.prepare_cmd()
         self.send_msg(msg)
-    
+
     def send_tell(self, time_step: int, message: str):
         cmd = AKTell(self.get_id(), time_step, message)
         msg = cmd.prepare_cmd()
         self.send_msg(msg)
-    
+
     def send_unload(self, time):
         cmd = AKUnload(self.get_id(), time)
         msg = cmd.prepare_cmd()
         self.send_msg(msg)
-    

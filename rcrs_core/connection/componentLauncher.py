@@ -17,7 +17,7 @@ class ComponentLauncher:
         connection.message_received(agent.message_received)
         agent.set_send_msg(connection.send_msg)
         agent.start_up(_request_id)
-        
+
         connection.parseMessageFromKernel()
 
     def generate_request_ID(self):

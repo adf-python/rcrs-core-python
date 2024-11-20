@@ -1,22 +1,20 @@
-from rcrs_core.entities.building import Building
-from rcrs_core.entities.road import Road
-from rcrs_core.entities.blockade import Blockade
-from rcrs_core.entities.refuge import Refuge
-from rcrs_core.entities.policeForce import PoliceForceEntity
-from rcrs_core.entities.policeOffice import PoliceOfficeEntity
-from rcrs_core.entities.ambulanceTeam import AmbulanceTeamEntity
-from rcrs_core.entities.ambulanceCenter import AmbulanceCentreEntity
-from rcrs_core.entities.fireBrigade import FireBrigadeEntity
-from rcrs_core.entities.fireStation import FireStationEntity
-from rcrs_core.entities.civilian import Civilian
-from rcrs_core.entities.hydrant import Hydrant
-from rcrs_core.entities.gassStation import GasStation
 from rcrs_core.connection import URN
-
+from rcrs_core.entities.ambulanceCenter import AmbulanceCentre
+from rcrs_core.entities.ambulanceTeam import AmbulanceTeam
+from rcrs_core.entities.blockade import Blockade
+from rcrs_core.entities.building import Building
+from rcrs_core.entities.civilian import Civilian
+from rcrs_core.entities.fireBrigade import FireBrigade
+from rcrs_core.entities.fireStation import FireStation
+from rcrs_core.entities.gasStation import GasStation
+from rcrs_core.entities.hydrant import Hydrant
+from rcrs_core.entities.policeForce import PoliceForce
+from rcrs_core.entities.policeOffice import PoliceOffice
+from rcrs_core.entities.refuge import Refuge
+from rcrs_core.entities.road import Road
 
 
 class StandardEntityFactory:
-
     _instance = None
 
     def __new__(cls):
@@ -37,17 +35,17 @@ class StandardEntityFactory:
         elif urn == URN.Entity.BLOCKADE:
             return Blockade(id)
         elif urn == URN.Entity.POLICE_FORCE:
-            return PoliceForceEntity(id)
+            return PoliceForce(id)
         elif urn == URN.Entity.POLICE_OFFICE:
-            return PoliceOfficeEntity(id)
+            return PoliceOffice(id)
         elif urn == URN.Entity.AMBULANCE_TEAM:
-            return AmbulanceTeamEntity(id)
+            return AmbulanceTeam(id)
         elif urn == URN.Entity.AMBULANCE_CENTRE:
-            return AmbulanceCentreEntity(id)
+            return AmbulanceCentre(id)
         elif urn == URN.Entity.FIRE_BRIGADE:
-            return FireBrigadeEntity(id)
+            return FireBrigade(id)
         elif urn == URN.Entity.FIRE_STATION:
-            return FireStationEntity(id)
+            return FireStation(id)
         elif urn == URN.Entity.CIVILIAN:
             return Civilian(id)
         elif urn == URN.Entity.HYDRANT:
