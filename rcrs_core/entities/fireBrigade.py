@@ -3,7 +3,7 @@ from rcrs_core.entities.human import Human
 from rcrs_core.properties.intProperty import IntProperty
 
 
-class FireBrigadeEntity(Human):
+class FireBrigade(Human):
     urn = URN.Entity.FIRE_BRIGADE
 
     def __init__(self, entity_id: int):
@@ -19,7 +19,7 @@ class FireBrigadeEntity(Human):
                 self.water.set_value(values)
 
     def copy_impl(self):
-        return FireBrigadeEntity(self.get_id())
+        return FireBrigade(self.get_id())
 
     def get_entity_name(self):
         return "Fire brigade"
