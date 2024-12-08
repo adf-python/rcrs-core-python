@@ -1,6 +1,6 @@
 from typing import List
 
-from rcrs_core.connection import URN
+from rcrs_core.connection import URN, RCRSProto_pb2
 from rcrs_core.entities.edge import Edge
 from rcrs_core.properties.property import Property
 from rcrs_core.worldmodel.entityID import EntityID
@@ -72,3 +72,27 @@ class EdgeListProperty(Property[list[Edge]]):
                 )
             )
         return new_edge_list_prop
+
+    def to_property_proto(self):
+        prop = RCRSProto_pb2.PropertyProto()
+        prop.urn = self.urn
+        if isinstance(self.value, list):
+            prop.defined = True
+            edge_list_proto = RCRSProto_pb2.EdgeListProto()
+            edge_proto_list = []
+            for edge in self.value:
+                edge_proto = RCRSProto_pb2.EdgeProto()
+                edge_proto.startX = edge.get_start_x()
+                edge_proto.startY = edge.get_start_y()
+                edge_proto.endX = edge.get_end_x()
+                edge_proto.endY = edge.get_end_y()
+                if edge.get_neighbour() is not None:
+                    edge_proto.neighbour = edge.get_neighbour().get_value()
+                else:
+                    edge_proto.neighbour = -1
+                edge_proto_list.append(edge_proto)
+            edge_list_proto.edges.extend(edge_proto_list)
+            prop.edgeList.CopyFrom(edge_list_proto)
+        else:
+            prop.defined = False
+        return prop

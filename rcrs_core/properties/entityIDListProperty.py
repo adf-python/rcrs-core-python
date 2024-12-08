@@ -1,4 +1,4 @@
-from rcrs_core.connection import URN
+from rcrs_core.connection import URN, RCRSProto_pb2
 from rcrs_core.properties.property import Property
 from rcrs_core.worldmodel.entityID import EntityID
 
@@ -33,3 +33,15 @@ class EntityIDListProperty(Property[list[EntityID]]):
             self.set_value(_property.get_value())
         else:
             raise Exception("cannot take value from ", _property)
+
+    def to_property_proto(self):
+        prop = RCRSProto_pb2.PropertyProto()
+        prop.urn = self.urn
+        if isinstance(self.value, list):
+            prop.defined = True
+            int_list_proto = RCRSProto_pb2.IntListProto()
+            int_list_proto.values.extend([entity_id.get_value() for entity_id in self.value])
+            prop.intList.CopyFrom(int_list_proto)
+        else:
+            prop.defined = False
+        return prop
