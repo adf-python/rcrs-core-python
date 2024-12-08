@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import Generic, TypeVar
 
+from rcrs_core.connection import RCRSProto_pb2
 from rcrs_core.connection import URN
 
 T = TypeVar("T")
@@ -14,6 +15,10 @@ class Property(Generic[T]):
 
     @abstractmethod
     def copy(self) -> "Property[T]":
+        pass
+
+    @abstractmethod
+    def to_property_proto(self):
         pass
 
     @abstractmethod

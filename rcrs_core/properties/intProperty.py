@@ -1,4 +1,4 @@
-from rcrs_core.connection import URN
+from rcrs_core.connection import URN, RCRSProto_pb2
 from rcrs_core.properties.property import Property
 
 
@@ -20,3 +20,13 @@ class IntProperty(Property[int]):
             self.set_value(_property.get_value())
         else:
             raise Exception("cannot take value from ", _property)
+
+    def to_property_proto(self):
+        prop = RCRSProto_pb2.PropertyProto()
+        prop.urn = self.urn
+        if isinstance(self.value, int):
+            prop.defined = True
+            prop.intValue = self.value
+        else:
+            prop.defined = False
+        return prop

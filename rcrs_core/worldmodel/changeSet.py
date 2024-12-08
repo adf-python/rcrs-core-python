@@ -1,3 +1,6 @@
+from rcrs_core.connection import RCRSProto_pb2
+
+
 class ChangeSet:
     def __init__(self, _change_set=None):
         self.changed = {}
@@ -56,3 +59,21 @@ class ChangeSet:
 
         for _entity_id in _change_set.deleted:
             self.entity_deleted(_entity_id)
+
+    def to_change_set_proto(self):
+        entity_change_proto_list = []
+        change_set_proto = RCRSProto_pb2.ChangeSetProto()
+        for changed_entity_id, changed_properties in self.changed.items():
+            entity_change_proto = change_set_proto.EntityChangeProto()
+            entity_change_proto.entityID = changed_entity_id.get_value()
+            entity_change_proto.urn = self.entity_urns[changed_entity_id]
+            property_proto_list = []
+            for property_urn, property_value in changed_properties.items():
+                property_proto = property_value.to_property_proto()
+                property_proto_list.append(property_proto)
+            entity_change_proto.properties.extend(property_proto_list)
+            entity_change_proto_list.append(entity_change_proto)
+        change_set_proto.changes.extend(entity_change_proto_list)
+        change_set_proto.deletes.extend([entity_id.get_value() for entity_id in list(self.deleted)])
+
+        return change_set_proto
