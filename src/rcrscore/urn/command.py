@@ -1,0 +1,16 @@
+from enum import IntEnum
+
+
+class CommandURN(IntEnum):
+  AK_REST = 0x1301
+  AK_MOVE = 0x1302
+  AK_LOAD = 0x1303
+  AK_UNLOAD = 0x1304
+  AK_SAY = 0x1305
+  AK_TELL = 0x1306
+  AK_EXTINGUISH = 0x1307
+  AK_RESCUE = 0x1308
+  AK_CLEAR = 0x1309
+  AK_CLEAR_AREA = 0x130A
+  AK_SUBSCRIBE = 0x130B
+  AK_SPEAK = 0x130C
