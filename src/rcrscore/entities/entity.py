@@ -1,0 +1,61 @@
+from abc import ABC, abstractmethod
+
+from rcrscore.entities.entity_id import EntityID
+from rcrscore.properties.int_property import IntProperty
+from rcrscore.properties.property import Property
+from rcrscore.urn.entity import EntityURN
+from rcrscore.urn.property import PropertyURN
+
+
+class Entity(ABC):
+  def __init__(self, entity_id: int) -> None:
+    self._entity_id: EntityID = EntityID(entity_id)
+    self._x: IntProperty = IntProperty(PropertyURN.X)
+    self._y: IntProperty = IntProperty(PropertyURN.Y)
+    self._properties: dict[PropertyURN, Property] = {}
+
+    self.register_properties([self._x, self._y])
+
+  def set_from_properties(self, properties) -> None:
+    for key, values in properties.items():
+      if key == PropertyURN.X:
+        self._x.set_value(values)
+      elif key == PropertyURN.Y:
+        self._y.set_value(values)
+
+  def register_properties(self, properties: list[Property]) -> None:
+    for property in properties:
+      self._properties[property.get_urn()] = property
+
+  @abstractmethod
+  def get_urn(self) -> EntityURN:
+    raise NotImplementedError("Subclasses must implement get_urn method")
+
+  def get_entity_id(self) -> EntityID:
+    return self._entity_id
+
+  def get_properties(self) -> dict[PropertyURN, Property]:
+    return self._properties
+
+  def get_property(self, property_urn: PropertyURN) -> Property | None:
+    return self._properties.get(property_urn)
+
+  def get_location(self) -> tuple[IntProperty, IntProperty]:
+    return self._x, self._y
+
+  def get_x(self) -> IntProperty:
+    return self._x
+
+  def get_y(self) -> IntProperty:
+    return self._y
+
+  def __hash__(self) -> int:
+    return self._entity_id.get_value()
+
+  def __str__(self) -> str:
+    return (
+      f"Entity(id={self._entity_id}, x={self._x.get_value()}, y={self._y.get_value()})"
+    )
+
+  def __repr__(self) -> str:
+    return f"Entity(entity_id={self._entity_id}, x={self._x}, y={self._y}, properties={self._properties})"
