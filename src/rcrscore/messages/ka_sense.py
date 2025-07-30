@@ -37,5 +37,6 @@ class KASense(KAControlMessage):
     for entity_id in changes.deletes:
       self.change_set.add_deleted(EntityID(entity_id))
 
-  def get_urn(self) -> ControlMessageURN:
+  @staticmethod
+  def get_urn() -> ControlMessageURN:
     return ControlMessageURN.KA_SENSE

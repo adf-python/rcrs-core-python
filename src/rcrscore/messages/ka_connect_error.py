@@ -16,5 +16,6 @@ class KAConnectError(KAControlMessage):
       ComponentControlMessageURN.Reason
     ].stringValue
 
-  def get_urn(self) -> ControlMessageURN:
+  @staticmethod
+  def get_urn() -> ControlMessageURN:
     return ControlMessageURN.KA_CONNECT_ERROR

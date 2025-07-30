@@ -40,5 +40,6 @@ class KAConnectOK(KAControlMessage):
     for key, value in config.data.items():
       self.config.set_value(key, value)
 
-  def get_urn(self) -> ControlMessageURN:
+  @staticmethod
+  def get_urn() -> ControlMessageURN:
     return ControlMessageURN.KA_CONNECT_OK
