@@ -1,22 +1,22 @@
-from rcrs_core.connection import URN
-from rcrs_core.messages.KAConnectError import KAConnectError
-from rcrs_core.messages.KAConnectOK import KAConnectOK
-from rcrs_core.messages.KASense import KASense
-from rcrs_core.messages.Shutdown import Shutdown
+from rcrscore.messages.ka_connect_error import KAConnectError
+from rcrscore.messages.ka_connect_ok import KAConnectOK
+from rcrscore.messages.ka_sense import KASense
+from rcrscore.messages.message import ControlMessage
+from rcrscore.messages.shutdown import Shutdown
+from rcrscore.urn.control_message import ControlMessageURN
 
 
 class ControlMessageFactory:
-    def __init__(self) -> None:
-        pass
-
-    def make_message(self, msg):
-        if msg.urn == URN.ControlMSG.KA_SENSE:
-            return KASense(msg)
-        elif msg.urn == URN.ControlMSG.KA_CONNECT_OK:
-            return KAConnectOK(msg)
-        elif msg.urn == URN.ControlMSG.KA_CONNECT_ERROR:
-            return KAConnectError(msg)
-        elif msg.urn == URN.ControlMSG.SHUTDOWN:
-            return Shutdown(msg)
-
-        return None
+  @staticmethod
+  def make_message(msg) -> ControlMessage:
+    match msg.urn:
+      case ControlMessageURN.KA_SENSE:
+        return KASense(msg)
+      case ControlMessageURN.KA_CONNECT_OK:
+        return KAConnectOK(msg)
+      case ControlMessageURN.KA_CONNECT_ERROR:
+        return KAConnectError(msg)
+      case ControlMessageURN.SHUTDOWN:
+        return Shutdown()
+      case _:
+        raise ValueError(f"Unknown control message URN: {msg.urn}")
