@@ -1,170 +1,184 @@
-from typing import List
-
 from rtree import index
 
-from rcrs_core.entities import standardEntityFactory
-from rcrs_core.entities.area import Area
-from rcrs_core.entities.blockade import Blockade
-from rcrs_core.entities.entity import Entity
-from rcrs_core.entities.human import Human
-from rcrs_core.worldmodel.changeSet import ChangeSet
-from rcrs_core.worldmodel.entityID import EntityID
+from rcrscore.entities.area import Area
+from rcrscore.entities.blockade import Blockade
+from rcrscore.entities.entity import Entity
+from rcrscore.entities.entity_id import EntityID
+from rcrscore.entities.human import Human
+from rcrscore.entities.standard_entity_factory import StandardEntityFactory
+from rcrscore.worldmodel.change_set import ChangeSet
 
 
 class WorldModel:
-    def __init__(self) -> None:
-        self.index = index.Index()
-        self.stored_types = {}
-        self.unindexedـentities = {}
-        self.human_rectangles = {}
-        self.indexed = False
-        self.minx = None
-        self.miny = None
-        self.maxx = None
-        self.maxy = None
-        self.num = 0
+  def __init__(self) -> None:
+    self.index = index.Index()
+    self.stored_types = {}
+    self.unindexed_entities: dict[EntityID, Entity] = {}
+    self.human_rectangles = {}
+    self.indexed = False
+    self.min_x = None
+    self.min_y = None
+    self.max_x = None
+    self.max_y = None
+    self.num = 0
 
-    def add_entities(self, entities: List[Entity]):
-        for entity in entities:
-            self.unindexedـentities[entity.get_id()] = entity
-        # print(len(entities), ' entities added to world_model')
+  def add_entity(self, entity: Entity) -> None:
+    self.unindexed_entities[entity.get_entity_id()] = entity
 
-    def get_entity(self, entity_id: EntityID) -> Entity:
-        if entity_id in self.unindexedـentities:
-            return self.unindexedـentities.get(entity_id)
+  def add_entities(self, entities: list[Entity]) -> None:
+    for entity in entities:
+      self.unindexed_entities[entity.get_entity_id()] = entity
 
+  def get_entity(self, entity_id: EntityID) -> Entity | None:
+    return self.unindexed_entities.get(entity_id)
+
+  def get_entities(self) -> list[Entity]:
+    return list(self.unindexed_entities.values())
+
+  def delete_entity(self, entity_id: EntityID) -> None:
+    del self.unindexed_entities[entity_id]
+
+  def delete_entities(self, entity_ids: list[EntityID]) -> None:
+    for entity_id in entity_ids:
+      self.delete_entity(entity_id)
+
+  def merge(self, change_set: ChangeSet) -> None:
+    for entity_id in change_set.get_changed_entities():
+      entity = self.get_entity(entity_id)
+      if entity is None:
+        entity_urn = change_set.get_entity_urn(entity_id)
+        if entity_urn is None:
+          raise ValueError(f"Entity URN not found for entity ID: {entity_id}")
+        entity = StandardEntityFactory.make_entity(entity_urn, entity_id.get_value())
+        self.add_entity(entity)
+
+      entity.set_from_properties(change_set.get_entity_changes(entity_id))
+
+    for entity_id in change_set.get_deleted_entities():
+      self.delete_entity(entity_id)
+
+    # update human rectangles
+    new_human_rectangles_to_push = {}
+    for human in self.human_rectangles:
+      rectangle = self.human_rectangles[human]
+      self.index.delete(human.entity_id, rectangle)
+      rectangle = self.make_rectangle(human)
+      if rectangle is not None:
+        left, bottom, right, top = rectangle
+        self.index.insert(human.entity_id, (left, bottom, right, top))
+        new_human_rectangles_to_push[human] = (left, bottom, right, top)
+
+    for human in new_human_rectangles_to_push:
+      rectangle = new_human_rectangles_to_push[human]
+      self.human_rectangles[human] = rectangle
+
+  def index_entities(self):
+    if not self.indexed:
+      self.min_x = float("inf")
+      self.min_y = float("inf")
+      self.max_x = float("inf")
+      self.max_y = float("inf")
+
+      self.index = index.Index()
+      self.human_rectangles.clear()
+
+      for entity in self.unindexed_entities.values():
+        rectangle = self.make_rectangle(entity)
+
+        if rectangle is not None:
+          left, bottom, right, top = rectangle
+          self.index.insert(
+            entity.get_entity_id().get_value(), (left, bottom, right, top)
+          )
+          self.min_x = min(self.min_x, left, right)
+          self.max_x = max(self.max_x, left, right)
+          self.min_y = min(self.min_y, bottom, top)
+          self.max_y = max(self.max_y, bottom, top)
+          if isinstance(entity, Human):
+            self.human_rectangles[entity] = (left, bottom, right, top)
+      self.indexed = True
+
+  def make_rectangle(self, entity) -> tuple[float, float, float, float] | None:
+    x1 = x2 = y1 = y2 = float("inf")
+    apexes = []
+
+    if isinstance(entity, Area):
+      apexes = entity.get_apexes()
+    elif isinstance(entity, Blockade):
+      apexes = entity.get_apexes().get_value()
+      if apexes is None:
         return None
+    elif isinstance(entity, Human):
+      apexes = []
+      human_x, human_y = entity.get_location()
+      apexes.append(human_x)
+      apexes.append(human_y)
+    else:
+      return None
 
-    def add_entity(self, entity):
-        self.unindexedـentities[entity.get_id()] = entity
+    if len(apexes) == 0:
+      print("this " + str(type(entity)) + "entity does not have apexes!!")
+      return None
 
-    def remove_entity(self, entity_id):
-        del self.unindexedـentities[entity_id]
+    for i in range(0, len(apexes), 2):
+      x1 = min(x1, apexes[i])
+      x2 = max(x2, apexes[i])
+      y1 = min(y1, apexes[i + 1])
+      y2 = max(y2, apexes[i + 1])
+    return x1, y1, x2, y2
 
-    def get_entities(self):
-        return self.unindexedـentities.values()
+  def get_rect_bounds(self) -> tuple[float, float, float, float]:
+    if not self.indexed:
+      self.index_entities()
 
-    def merge(self, change_set: ChangeSet):
-        for entity_id in change_set.get_changed_entities():
-            existing_entity = self.get_entity(entity_id)
-            added = False
-            if existing_entity is None:
-                existing_entity = (
-                    standardEntityFactory.StandardEntityFactory.make_entity(
-                        change_set.get_entity_urn(entity_id), entity_id.get_value()
-                    )
-                )
-                if existing_entity is None:
-                    print("world model merge existing entity is still None")
-                    continue
-                added = True
+    if (
+      self.min_x is None
+      or self.min_y is None
+      or self.max_x is None
+      or self.max_y is None
+    ):
+      raise ValueError("Bounds are not properly initialized.")
 
-            for property in change_set.get_changed_properties(entity_id):
-                existing_property = existing_entity.get_property(property.get_urn())
-                existing_property.take_value(property)
+    return self.min_x, self.min_y, self.max_x - self.min_x, self.max_y - self.min_y
 
-            if added:
-                self.add_entity(existing_entity)
+  def get_world_bounds(self) -> tuple[float, float, float, float]:
+    if not self.indexed:
+      self.index_entities()
 
-        for entity_id in change_set.get_deleted_entities():
-            self.remove_entity(entity_id)
+    if (
+      self.min_x is None
+      or self.min_y is None
+      or self.max_x is None
+      or self.max_y is None
+    ):
+      raise ValueError("Bounds are not properly initialized.")
 
-        # update human rectangles
-        new_human_rectangles_to_push = {}
-        for human in self.human_rectangles:
-            rectangle = self.human_rectangles[human]
-            self.index.delete(human.entity_id, rectangle)
-            left, bottom, right, top = self.make_rectangle(human)
-            if left is not None:
-                self.index.insert(human.entity_id, (left, bottom, right, top))
-                new_human_rectangles_to_push[human] = (left, bottom, right, top)
+    return self.min_x, self.min_y, self.max_x, self.max_y
 
-        for human in new_human_rectangles_to_push:
-            rectangle = new_human_rectangles_to_push[human]
-            self.human_rectangles[human] = rectangle
+  def get_objects_in_rectangle(
+    self, x1: float, y1: float, x2: float, y2: float
+  ) -> list[Entity]:
+    if not self.indexed:
+      self.index_entities()
 
-    def index_entities(self):
-        if not self.indexed:
-            self.minx = float("inf")
-            self.miny = float("inf")
-            self.maxx = float("inf")
-            self.maxy = float("inf")
+    entities_ids = self.index.intersection((x1, y1, x2, y2))
 
-            self.index = index.Index()
-            self.human_rectangles.clear()
+    result = []
+    for entity_id in entities_ids:
+      result.append(self.get_entity(EntityID(entity_id)))
 
-            for entity in self.unindexedـentities.values():
-                left, bottom, right, top = self.make_rectangle(entity)
-                if left is not None:
-                    self.index.insert(entity.entity_id, (left, bottom, right, top))
-                    self.minx = min(self.minx, left, right)
-                    self.maxx = max(self.maxx, left, right)
-                    self.miny = min(self.miny, bottom, top)
-                    self.maxy = max(self.maxy, bottom, top)
-                    if isinstance(entity, Human):
-                        self.human_rectangles[entity] = (left, bottom, right, top)
-            self.indexed = True
+    return result
 
-    def make_rectangle(self, entity):
-        x1 = x2 = y1 = y2 = float("inf")
-        apexes = []
+  def get_objects_in_range(self, entity: Entity, range: float) -> list[Entity]:
+    location = entity.get_location()
 
-        if isinstance(entity, Area):
-            apexes = entity.apexList
-        elif isinstance(entity, Blockade):
-            apexes = entity.apexes.value
-        elif isinstance(entity, Human):
-            apexes = []
-            human_x, human_y = entity.get_location()
-            apexes.append(human_x)
-            apexes.append(human_y)
-        else:
-            return None, None, None, None
+    if location is None:
+      return []
 
-        if len(apexes) == 0:
-            print("this " + str(type(entity)) + "entity does not have apexes!!")
-            return None, None, None, None
+    x = location[0].get_value()
+    y = location[1].get_value()
 
-        for i in range(0, len(apexes), 2):
-            x1 = min(x1, apexes[i])
-            x2 = max(x2, apexes[i])
-            y1 = min(y1, apexes[i + 1])
-            y2 = max(y2, apexes[i + 1])
-        return x1, y1, x2, y2
+    if x is None or y is None:
+      return []
 
-    # returns rect(x, y, w, h)
-    def get_rect_bounds(self):
-        if self.indexed == False:
-            self.index_entities()
-
-        return self.minX, self.minY, self.maxX - self.minX, self.maxY - self.minY
-
-    # returns minX, minY, maxX, maxY
-    def get_world_bounds(self):
-        if self.indexed == False:
-            self.index_entities()
-
-        return self.minX, self.minY, self.maxX, self.maxY
-
-    def get_objects_in_rectangle(self, x1, y1, x2, y2):
-        if self.indexed == False:
-            self.index_entities()
-
-        entities_ids = index.intersection(x1, y1, x2, y2)
-
-        result = []
-        for entity_id in entities_ids:
-            result.append(self.get_entity(entity_id))
-
-        return result
-
-    def get_objects_in_range(self, entity, range):
-        location = entity.get_location()
-
-        if location == None:
-            return []
-
-        x = location[0]
-        y = location[1]
-
-        return self.get_objects_in_rectangle(x - range, y - range, x + range, y + range)
+    return self.get_objects_in_rectangle(x - range, y - range, x + range, y + range)
