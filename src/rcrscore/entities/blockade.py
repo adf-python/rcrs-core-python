@@ -1,6 +1,7 @@
 from typing import override
 
 from rcrscore.entities.entity import Entity
+from rcrscore.entities.entity_id import EntityID
 from rcrscore.properties.entity_id_property import EntityIDProperty
 from rcrscore.properties.int_list_property import IntListProperty
 from rcrscore.properties.int_property import IntProperty
@@ -33,11 +34,20 @@ class Blockade(Entity):
       elif key == PropertyURN.REPAIR_COST:
         self._repair_cost.set_value(values.get_value())
 
-  def get_position(self) -> EntityIDProperty:
+  def get_position(self) -> EntityID | None:
+    return self._position.get_value()
+
+  def get_position_property(self) -> EntityIDProperty:
     return self._position
 
-  def get_apexes(self) -> IntListProperty:
+  def get_apexes(self) -> list[int] | None:
+    return self._apexes.get_value()
+
+  def get_apexes_property(self) -> IntListProperty:
     return self._apexes
 
-  def get_repair_cost(self) -> IntProperty:
+  def get_repair_cost(self) -> int | None:
+    return self._repair_cost.get_value()
+
+  def get_repair_cost_property(self) -> IntProperty:
     return self._repair_cost

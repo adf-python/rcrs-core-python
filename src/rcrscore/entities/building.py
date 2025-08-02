@@ -10,31 +10,31 @@ from rcrscore.urn.property import PropertyURN
 class Building(Area):
   def __init__(self, entity_id: int) -> None:
     super().__init__(entity_id)
-    self.floors: IntProperty = IntProperty(PropertyURN.FLOORS)
-    self.ignition: IntProperty = IntProperty(PropertyURN.IGNITION)
-    self.fieryness: IntProperty = IntProperty(PropertyURN.FIERYNESS)
-    self.brokenness: IntProperty = IntProperty(PropertyURN.BROKENNESS)
-    self.building_code: IntProperty = IntProperty(PropertyURN.BUILDING_CODE)
-    self.attributes: IntProperty = IntProperty(PropertyURN.BUILDING_ATTRIBUTES)
-    self.ground_area: IntProperty = IntProperty(PropertyURN.BUILDING_AREA_GROUND)
-    self.total_area: IntProperty = IntProperty(PropertyURN.BUILDING_AREA_TOTAL)
-    self.temperature: IntProperty = IntProperty(PropertyURN.TEMPERATURE)
-    self.importance: IntProperty = IntProperty(PropertyURN.IMPORTANCE)
-    self.capacity: IntProperty = IntProperty(PropertyURN.CAPACITY)
+    self._floors: IntProperty = IntProperty(PropertyURN.FLOORS)
+    self._ignition: IntProperty = IntProperty(PropertyURN.IGNITION)
+    self._fieryness: IntProperty = IntProperty(PropertyURN.FIERYNESS)
+    self._brokenness: IntProperty = IntProperty(PropertyURN.BROKENNESS)
+    self._building_code: IntProperty = IntProperty(PropertyURN.BUILDING_CODE)
+    self._attributes: IntProperty = IntProperty(PropertyURN.BUILDING_ATTRIBUTES)
+    self._ground_area: IntProperty = IntProperty(PropertyURN.BUILDING_AREA_GROUND)
+    self._total_area: IntProperty = IntProperty(PropertyURN.BUILDING_AREA_TOTAL)
+    self._temperature: IntProperty = IntProperty(PropertyURN.TEMPERATURE)
+    self._importance: IntProperty = IntProperty(PropertyURN.IMPORTANCE)
+    self._capacity: IntProperty = IntProperty(PropertyURN.CAPACITY)
 
     self.register_properties(
       [
-        self.floors,
-        self.ignition,
-        self.fieryness,
-        self.brokenness,
-        self.attributes,
-        self.ground_area,
-        self.total_area,
-        self.capacity,
-        self.temperature,
-        self.importance,
-        self.building_code,
+        self._floors,
+        self._ignition,
+        self._fieryness,
+        self._brokenness,
+        self._attributes,
+        self._ground_area,
+        self._total_area,
+        self._capacity,
+        self._temperature,
+        self._importance,
+        self._building_code,
       ]
     )
 
@@ -47,83 +47,116 @@ class Building(Area):
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.FLOORS:
-        self.floors.set_value(values.get_value())
+        self._floors.set_value(values.get_value())
       elif key == PropertyURN.IGNITION:
-        self.ignition.set_value(values.get_value())
+        self._ignition.set_value(values.get_value())
       elif key == PropertyURN.FIERYNESS:
-        self.fieryness.set_value(values.get_value())
+        self._fieryness.set_value(values.get_value())
       elif key == PropertyURN.BROKENNESS:
-        self.brokenness.set_value(values.get_value())
+        self._brokenness.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_CODE:
-        self.building_code.set_value(values.get_value())
+        self._building_code.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_ATTRIBUTES:
-        self.attributes.set_value(values.get_value())
+        self._attributes.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_AREA_GROUND:
-        self.ground_area.set_value(values.get_value())
+        self._ground_area.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_AREA_TOTAL:
-        self.total_area.set_value(values.get_value())
+        self._total_area.set_value(values.get_value())
       elif key == PropertyURN.TEMPERATURE:
-        self.temperature.set_value(values.get_value())
+        self._temperature.set_value(values.get_value())
       elif key == PropertyURN.IMPORTANCE:
-        self.importance.set_value(values.get_value())
+        self._importance.set_value(values.get_value())
 
   def is_fiery(self) -> bool:
-    fieryness_value = self.fieryness.get_value()
+    fieryness_value = self._fieryness.get_value()
     # HEATING:1 BURNING:2 INFERNO:3
     if fieryness_value == 1 or fieryness_value == 2 or fieryness_value == 3:
       return True
     return False
 
-  def get_floors(self) -> IntProperty:
-    return self.floors
+  def get_floors(self) -> int | None:
+    return self._floors.get_value()
 
-  def get_ignition(self) -> IntProperty:
-    return self.ignition
+  def get_floors_property(self) -> IntProperty:
+    return self._floors
 
-  def get_fieryness(self) -> IntProperty:
-    return self.fieryness
+  def get_ignition(self) -> int | None:
+    return self._ignition.get_value()
 
-  def get_brokenness(self) -> IntProperty:
-    return self.brokenness
+  def get_ignition_property(self) -> IntProperty:
+    return self._ignition
 
-  def get_building_code(self) -> IntProperty:
-    return self.building_code
+  def get_fieryness(self) -> int | None:
+    return self._fieryness.get_value()
 
-  def get_attributes(self) -> IntProperty:
-    return self.attributes
+  def get_fieryness_property(self) -> IntProperty:
+    return self._fieryness
 
-  def get_ground_area(self) -> IntProperty:
-    return self.ground_area
+  def get_brokenness(self) -> int | None:
+    return self._brokenness.get_value()
 
-  def get_total_area(self) -> IntProperty:
-    return self.total_area
+  def get_brokenness_property(self) -> IntProperty:
+    return self._brokenness
 
-  def get_temperature(self) -> IntProperty:
-    return self.temperature
+  def get_building_code(self) -> int | None:
+    return self._building_code.get_value()
 
-  def get_importance(self) -> IntProperty:
-    return self.importance
+  def get_building_code_property(self) -> IntProperty:
+    return self._building_code
 
-  def get_capacity(self) -> IntProperty:
-    return self.capacity
+  def get_attributes(self) -> int | None:
+    return self._attributes.get_value()
+
+  def get_attributes_property(self) -> IntProperty:
+    return self._attributes
+
+  def get_ground_area(self) -> int | None:
+    return self._ground_area.get_value()
+
+  def get_ground_area_property(self) -> IntProperty:
+    return self._ground_area
+
+  def get_total_area(self) -> int | None:
+    return self._total_area.get_value()
+
+  def get_total_area_property(self) -> IntProperty:
+    return self._total_area
+
+  def get_temperature(self) -> int | None:
+    return self._temperature.get_value()
+
+  def get_temperature_property(self) -> IntProperty:
+    return self._temperature
+
+  def get_importance(self) -> int | None:
+    return self._importance.get_value()
+
+  def get_importance_property(self) -> IntProperty:
+    return self._importance
+
+  def get_capacity(self) -> int | None:
+    return self._capacity.get_value()
+
+  def get_capacity_property(self) -> IntProperty:
+    return self._capacity
 
   def __str__(self) -> str:
     return (
-      f"Building(id={self.get_entity_id()}, x={self.get_x().get_value()}, "
-      f"y={self.get_y().get_value()}, floors={self.floors.get_value()}, "
-      f"ignition={self.ignition.get_value()}, fieryness={self.fieryness.get_value()}, "
-      f"brokenness={self.brokenness.get_value()}, building_code={self.building_code.get_value()}, "
-      f"attributes={self.attributes.get_value()}, ground_area={self.ground_area.get_value()}, "
-      f"total_area={self.total_area.get_value()}, temperature={self.temperature.get_value()}, "
-      f"importance={self.importance.get_value()})"
+      f"Building(id={self.get_entity_id()}, x={self.get_x()}, "
+      f"y={self.get_y()}, floors={self._floors.get_value()}, "
+      f"ignition={self._ignition.get_value()}, fieryness={self._fieryness.get_value()}, "
+      f"brokenness={self._brokenness.get_value()}, building_code={self._building_code.get_value()}, "
+      f"attributes={self._attributes.get_value()}, ground_area={self._ground_area.get_value()}, "
+      f"total_area={self._total_area.get_value()}, temperature={self._temperature.get_value()}, "
+      f"importance={self._importance.get_value()})"
     )
 
   def __repr__(self) -> str:
     return (
       f"Building(entity_id={self.get_entity_id()}, x={self.get_x()}, y={self.get_y()}, "
-      f"floors={self.floors}, ignition={self.ignition}, fieryness={self.fieryness}, "
-      f"brokenness={self.brokenness}, building_code={self.building_code}, "
-      f"attributes={self.attributes}, ground_area={self.ground_area}, "
-      f"total_area={self.total_area}, temperature={self.temperature}, "
-      f"importance={self.importance})"
+      f"floors={self._floors}, ignition={self._ignition}, fieryness={self._fieryness}, "
+      f"brokenness={self._brokenness}, building_code={self._building_code}, "
+      f"attributes={self._attributes}, ground_area={self._ground_area}, "
+      f"total_area={self._total_area}, temperature={self._temperature}, "
+      f"importance={self._importance})"
     )

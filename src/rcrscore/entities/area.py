@@ -39,14 +39,23 @@ class Area(Entity):
     return self._neighbors
 
   def get_edge_to(self, neighbor: EntityID) -> Edge | None:
-    if edges := self.get_edges().get_value():
+    if edges := self.get_edges():
       for edge in edges:
         if neighbor == edge.get_neighbour():
           return edge
     return None
 
-  def get_edges(self) -> EdgeListProperty:
+  def get_edges(self) -> list[Edge] | None:
+    return self._edges.get_value()
+
+  def get_edges_property(self) -> EdgeListProperty:
     return self._edges
+
+  def get_blockades(self) -> list[EntityID] | None:
+    return self._blockades.get_value()
+
+  def get_blockades_property(self) -> EntityIDListProperty:
+    return self._blockades
 
   def get_apexes(self) -> list[int]:
     if self._apexes != []:
@@ -57,9 +66,6 @@ class Area(Entity):
         self._apexes.append(edge.get_start_x())
         self._apexes.append(edge.get_start_y())
     return self._apexes
-
-  def get_blockades(self) -> EntityIDListProperty:
-    return self._blockades
 
   def __str__(self) -> str:
     return f"Area(id={self.get_entity_id()}, edges={self._edges}, blockades={self._blockades})"

@@ -40,13 +40,19 @@ class Entity(ABC):
   def get_property(self, property_urn: PropertyURN) -> Property | None:
     return self._properties.get(property_urn)
 
-  def get_location(self) -> tuple[IntProperty, IntProperty]:
-    return self._x, self._y
+  def get_location(self) -> tuple[int | None, int | None]:
+    return self._x.get_value(), self._y.get_value()
 
-  def get_x(self) -> IntProperty:
+  def get_x(self) -> int | None:
+    return self._x.get_value()
+
+  def get_x_property(self) -> IntProperty:
     return self._x
 
-  def get_y(self) -> IntProperty:
+  def get_y(self) -> int | None:
+    return self._y.get_value()
+
+  def get_y_property(self) -> IntProperty:
     return self._y
 
   def __hash__(self) -> int:

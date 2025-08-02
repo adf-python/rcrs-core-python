@@ -10,9 +10,9 @@ from rcrscore.urn.property import PropertyURN
 class FireBrigade(Human):
   def __init__(self, entity_id: int) -> None:
     super().__init__(entity_id)
-    self.water = IntProperty(PropertyURN.WATER_QUANTITY)
+    self._water = IntProperty(PropertyURN.WATER_QUANTITY)
 
-    self.register_properties([self.water])
+    self.register_properties([self._water])
 
   @override
   def get_urn(self) -> EntityURN:
@@ -23,7 +23,10 @@ class FireBrigade(Human):
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.WATER_QUANTITY:
-        self.water.set_value(values.get_value())
+        self._water.set_value(values.get_value())
 
-  def get_water(self) -> IntProperty:
-    return self.water
+  def get_water(self) -> int | None:
+    return self._water.get_value()
+
+  def get_water_property(self) -> IntProperty:
+    return self._water
