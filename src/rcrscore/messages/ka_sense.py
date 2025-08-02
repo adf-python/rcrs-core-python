@@ -5,7 +5,6 @@ from rcrscore.proto.RCRSProto_pb2 import MessageListProto, MessageProto
 from rcrscore.urn.component_control_message import ComponentControlMessageURN
 from rcrscore.urn.control_message import ControlMessageURN
 from rcrscore.urn.entity import EntityURN
-from rcrscore.urn.property import PropertyURN
 from rcrscore.worldmodel.change_set import ChangeSet
 
 
@@ -27,12 +26,8 @@ class KASense(KAControlMessage):
       entity_id = EntityID(change.entityID)
       entity_urn = EntityURN(change.urn)
       for p in change.properties:
-        property_urn = PropertyURN(p.urn)
-        property = StandardPropertyFactory.make_property(property_urn)
-        value = getattr(p, p.WhichOneof("value")) if p.defined else None
-        if property is not None and value is not None:
-          property.set_value(value)
-          self.change_set.add_changed(entity_id, entity_urn, property)
+        property = StandardPropertyFactory.from_property_proto(p)
+        self.change_set.add_changed(entity_id, entity_urn, property)
 
     for entity_id in changes.deletes:
       self.change_set.add_deleted(EntityID(entity_id))

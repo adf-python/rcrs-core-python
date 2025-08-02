@@ -5,27 +5,27 @@ from rcrscore.urn.control_message import ControlMessageURN
 
 
 class ControlMessage(ABC):
-  @abstractmethod
   @staticmethod
+  @abstractmethod
   def get_urn() -> ControlMessageURN:
     raise NotImplementedError("Subclasses must implement get_urn method")
 
 
 class AKControlMessage(ControlMessage, ABC):
-  @abstractmethod
   @staticmethod
+  @abstractmethod
   def get_urn() -> ControlMessageURN:
     raise NotImplementedError("Subclasses must implement get_urn method")
 
-  @abstractmethod
   @staticmethod
+  @abstractmethod
   def write():
     raise NotImplementedError("Subclasses must implement write method")
 
 
 class KAControlMessage(ControlMessage, ABC):
-  @abstractmethod
   @staticmethod
+  @abstractmethod
   def get_urn() -> ControlMessageURN:
     raise NotImplementedError("Subclasses must implement get_urn method")
 

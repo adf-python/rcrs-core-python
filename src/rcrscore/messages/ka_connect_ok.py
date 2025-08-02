@@ -1,6 +1,8 @@
 from rcrscore.config.config import Config
+from rcrscore.entities.entity import Entity
 from rcrscore.entities.standard_entity_factory import StandardEntityFactory
 from rcrscore.messages.message import KAControlMessage
+from rcrscore.properties.standard_property_factory import StandardPropertyFactory
 from rcrscore.proto.RCRSProto_pb2 import MessageProto
 from rcrscore.urn.component_control_message import ComponentControlMessageURN
 from rcrscore.urn.control_message import ControlMessageURN
@@ -11,7 +13,7 @@ from rcrscore.urn.property import PropertyURN
 class KAConnectOK(KAControlMessage):
   def __init__(self, message_proto: MessageProto) -> None:
     self.config = Config()
-    self.world = []
+    self.world: list[Entity] = []
     self.read(message_proto)
 
   def read(self, message_proto: MessageProto) -> None:
@@ -30,10 +32,8 @@ class KAConnectOK(KAControlMessage):
       entity = StandardEntityFactory.make_entity(EntityURN(e.urn), e.entityID)
       properties = {}
       for property in e.properties:
-        value = (
-          getattr(property, property.WhichOneof("value")) if property.defined else None
-        )
-        properties[PropertyURN(property.urn)] = value
+        urn = PropertyURN(property.urn)
+        properties[urn] = StandardPropertyFactory.from_property_proto(property)
       entity.set_from_properties(properties)
       self.world.append(entity)
 
