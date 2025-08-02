@@ -52,7 +52,8 @@ class WorldModel:
         entity = StandardEntityFactory.make_entity(entity_urn, entity_id.get_value())
         self.add_entity(entity)
 
-      entity.set_from_properties(change_set.get_entity_changes(entity_id))
+      if change_properties := change_set.get_entity_changes(entity_id):
+        entity.set_from_properties(change_properties)
 
     for entity_id in change_set.get_deleted_entities():
       self.delete_entity(entity_id)
