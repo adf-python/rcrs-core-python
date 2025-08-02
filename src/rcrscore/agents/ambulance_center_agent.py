@@ -1,7 +1,4 @@
-from logging import Logger
-
 from rcrscore.agents.agent import Agent
-from rcrscore.logger.logger import get_logger
 from rcrscore.proto.RCRSProto_pb2 import MessageListProto
 from rcrscore.urn.entity import EntityURN
 from rcrscore.worldmodel.change_set import ChangeSet
@@ -22,11 +19,6 @@ class AmbulanceCenterAgent(Agent):
 
   def get_name(self) -> str:
     return "AmbulanceCenterAgent"
-
-  def get_logger(self) -> Logger:
-    if not self.logger:
-      self.logger = get_logger(self.get_name(), self.get_entity_id().get_value())
-    return self.logger
 
   def get_urn(self) -> EntityURN:
     return EntityURN.AMBULANCE_CENTER

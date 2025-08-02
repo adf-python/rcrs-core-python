@@ -8,7 +8,7 @@ from rcrscore.urn.property import PropertyURN
 
 
 class ChangeSet:
-  def __init__(self, change_set=None) -> None:
+  def __init__(self, change_set: ChangeSet | None = None) -> None:
     self.changed: dict[EntityID, dict[PropertyURN, Property]] = {}
     self.deleted: set[EntityID] = set()
     self.entity_urns: dict[EntityID, EntityURN] = {}
@@ -31,17 +31,19 @@ class ChangeSet:
     self.changed[entity_id] = property_dict
     self.entity_urns[entity_id] = entity_urn
 
-  def add_deleted(self, entity_id) -> None:
+  def add_deleted(self, entity_id: EntityID) -> None:
     self.deleted.add(entity_id)
     if entity_id in self.changed:
       del self.changed[entity_id]
 
-  def get_changed_properties(self, entity_id) -> list[Property]:
+  def get_changed_properties(self, entity_id: EntityID) -> list[Property]:
     if entity_id in self.changed:
       return list(self.changed[entity_id].values())
     return []
 
-  def get_changed_property(self, entity_id, prop_urn) -> Property | None:
+  def get_changed_property(
+    self, entity_id: EntityID, prop_urn: PropertyURN
+  ) -> Property | None:
     if entity_id in self.changed:
       property_dict = self.changed.get(entity_id)
       if property_dict is not None and len(property_dict) > 0:

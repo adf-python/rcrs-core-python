@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
+from rcrscore.proto import RCRSProto_pb2
 from rcrscore.urn.property import PropertyURN
 
 T = TypeVar("T")
@@ -12,7 +13,7 @@ class Property(Generic[T], ABC):
     self._value: T | None = value
 
   @abstractmethod
-  def to_property_proto(self):
+  def to_property_proto(self) -> RCRSProto_pb2.PropertyProto:
     pass
 
   def set_value(self, value: T | None) -> None:

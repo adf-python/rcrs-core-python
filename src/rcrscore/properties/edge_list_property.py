@@ -10,7 +10,7 @@ class EdgeListProperty(Property[list[Edge]]):
   def __init__(self, urn: PropertyURN, value: List[Edge] | None = None) -> None:
     super().__init__(urn, value)
 
-  def to_property_proto(self):
+  def to_property_proto(self) -> RCRSProto_pb2.PropertyProto:
     proto = RCRSProto_pb2.PropertyProto()
     proto.urn = self.get_urn()
     if value := self.get_value():

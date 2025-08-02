@@ -12,14 +12,13 @@ from rcrscore.worldmodel.change_set import ChangeSet
 class WorldModel:
   def __init__(self) -> None:
     self.index = index.Index()
-    self.stored_types = {}
     self.unindexed_entities: dict[EntityID, Entity] = {}
-    self.human_rectangles = {}
+    self.human_rectangles: dict[Human, tuple[float, float, float, float]] = {}
     self.indexed = False
-    self.min_x = None
-    self.min_y = None
-    self.max_x = None
-    self.max_y = None
+    self.min_x: float | None = None
+    self.min_y: float | None = None
+    self.max_x: float | None = None
+    self.max_y: float | None = None
     self.num = 0
 
   def add_entity(self, entity: Entity) -> None:
@@ -62,18 +61,18 @@ class WorldModel:
     new_human_rectangles_to_push = {}
     for human in self.human_rectangles:
       rectangle = self.human_rectangles[human]
-      self.index.delete(human.entity_id, rectangle)
-      rectangle = self.make_rectangle(human)
-      if rectangle is not None:
-        left, bottom, right, top = rectangle
-        self.index.insert(human.entity_id, (left, bottom, right, top))
+      self.index.delete(human.get_entity_id().get_value(), rectangle)
+      new_rectangle = self.make_rectangle(human)
+      if new_rectangle is not None:
+        left, bottom, right, top = new_rectangle
+        self.index.insert(human.get_entity_id().get_value(), (left, bottom, right, top))
         new_human_rectangles_to_push[human] = (left, bottom, right, top)
 
     for human in new_human_rectangles_to_push:
       rectangle = new_human_rectangles_to_push[human]
       self.human_rectangles[human] = rectangle
 
-  def index_entities(self):
+  def index_entities(self) -> None:
     if not self.indexed:
       self.min_x = float("inf")
       self.min_y = float("inf")
@@ -99,7 +98,7 @@ class WorldModel:
             self.human_rectangles[entity] = (left, bottom, right, top)
       self.indexed = True
 
-  def make_rectangle(self, entity) -> tuple[float, float, float, float] | None:
+  def make_rectangle(self, entity: Entity) -> tuple[float, float, float, float] | None:
     x1 = x2 = y1 = y2 = float("inf")
     apexes = []
 

@@ -74,7 +74,7 @@ class ArgumentParser:
   DEFAULT_AGENT_COUNT = 0
   MAX_AGENT_COUNT_FOR_ALL = 100
 
-  def __init__(self):
+  def __init__(self) -> None:
     self.parser = self._create_parser()
 
   def _create_parser(self) -> argparse.ArgumentParser:
@@ -205,7 +205,7 @@ Examples:
       raise argparse.ArgumentTypeError(f"Port must be between 1 and 65535, got: {port}")
     return port
 
-  def _process_agent_counts(self, args) -> Dict[AgentType, int]:
+  def _process_agent_counts(self, args: argparse.Namespace) -> Dict[AgentType, int]:
     """Process agent count arguments."""
     agent_counts = {}
 
@@ -238,7 +238,7 @@ Examples:
 class Launcher:
   """Main launcher class for RCRS agents."""
 
-  def __init__(self):
+  def __init__(self) -> None:
     self.logger = logging.getLogger(__name__)
     self.agent_registry = AgentRegistry()
 

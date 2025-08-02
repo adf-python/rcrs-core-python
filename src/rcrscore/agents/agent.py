@@ -1,6 +1,7 @@
 import sys
 from abc import ABC, abstractmethod
 from logging import Logger
+from typing import Callable
 
 from rcrscore.commands.ak_clear import AKClear
 from rcrscore.commands.ak_clear_area import AKClearArea
@@ -38,7 +39,6 @@ class Agent(ABC):
     self.world_model: WorldModel = WorldModel()
     self.config: Config = Config()
     self.agent_id: EntityID = EntityID(-1)
-    self.logger: Logger | None = None
 
   @abstractmethod
   def precompute(self) -> None:
@@ -62,7 +62,9 @@ class Agent(ABC):
 
   def get_logger(self) -> Logger:
     if self.logger is None:
-      self.logger = get_logger(self.get_name(), self.get_entity_id().get_value())
+      self.logger: Logger = get_logger(
+        self.get_name(), self.get_entity_id().get_value()
+      )
     return self.logger
 
   def get_entity_id(self) -> EntityID:
@@ -114,8 +116,8 @@ class Agent(ABC):
     self.think(time, change_set, hear)
 
   def handle_connect_ok(self, msg: KAConnectOK) -> None:
-    self.agent_id: EntityID = EntityID(msg.agent_id)
-    self.config: Config = msg.config
+    self.agent_id = EntityID(msg.agent_id)
+    self.config = msg.config
     self.world_model.add_entities(msg.world)
     self.send_acknowledge(msg.request_id)
     self.post_connect()
@@ -127,7 +129,7 @@ class Agent(ABC):
     self.get_logger().warning("failed {0} : {1}".format(msg.request_id, msg.reason))
     sys.exit(1)
 
-  def set_send_msg(self, connection_send_func):
+  def set_send_msg(self, connection_send_func: Callable[[MessageProto], None]) -> None:
     self.send_msg = connection_send_func
 
   def send_connect(self, request_id: int) -> None:

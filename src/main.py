@@ -3,7 +3,7 @@ import sys
 from rcrscore.launcher.launcher import ArgumentParser, Launcher
 
 
-def main():
+def main() -> None:
   """Main entry point."""
   try:
     # Parse arguments

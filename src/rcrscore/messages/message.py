@@ -19,7 +19,7 @@ class AKControlMessage(ControlMessage, ABC):
 
   @staticmethod
   @abstractmethod
-  def write():
+  def write() -> None:
     raise NotImplementedError("Subclasses must implement write method")
 
 

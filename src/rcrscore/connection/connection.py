@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import logging
 import socket
 import struct
+from types import TracebackType
 from typing import Callable, Optional
 
 from rcrscore.proto.RCRSProto_pb2 import MessageProto
@@ -59,12 +62,12 @@ class Connection:
       finally:
         self.socket = None
 
-  def __enter__(self):
+  def __enter__(self) -> Connection:
     """Context manager entry."""
     self.connect()
     return self
 
-  def __exit__(self, exc_type, exc_val, exc_tb):
+  def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: TracebackType) -> None:
     """Context manager exit."""
     self.disconnect()
 

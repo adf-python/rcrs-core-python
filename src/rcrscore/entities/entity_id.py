@@ -13,7 +13,7 @@ class EntityID:
     """Get the value of the ID"""
     return self._id
 
-  def __eq__(self, other) -> bool:
+  def __eq__(self, other: object) -> bool:
     """Check equality"""
     if isinstance(other, EntityID):
       return self._id == other._id

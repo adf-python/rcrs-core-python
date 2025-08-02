@@ -11,7 +11,7 @@ class ComponentLauncher:
     self.host: str = host
     self.port: int = port
 
-  def connect(self, agent: Agent, request_id: int):
+  def connect(self, agent: Agent, request_id: int) -> None:
     with Connection(self.host, self.port) as connection:
       connection.set_agent_message_handler(agent.message_handlers)
       agent.set_send_msg(connection.send_message)
