@@ -54,6 +54,7 @@ exclude = [
     "venv",
     "pb2",
     "docs",
+    "proto",
 ]
 
 # Same as Black.

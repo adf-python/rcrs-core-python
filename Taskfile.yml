@@ -71,6 +71,28 @@ tasks:
       - task: proto:clean
       - task: proto:build
 
+  format:
+    desc: "Format Python code using Ruff"
+    cmds:
+      - uvx ruff format .
+
+  lint:
+    desc: "Lint Python code using Ruff"
+    cmds:
+      - uvx ruff check .
+
+  typecheck:
+    desc: "Type check Python code using MyPy"
+    cmds:
+      - uvx mypy .
+
+  precommit:
+    desc: "Run all checks before commit"
+    cmds:
+      - task: format
+      - task: lint
+      - task: typecheck
+
   # ヘルプ
   help:
     desc: "Show available tasks"
