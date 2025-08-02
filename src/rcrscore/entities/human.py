@@ -3,12 +3,11 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import override
 
-from rcrs_core.connection import URN
 from rcrscore.entities.entity import Entity
-from rcrscore.entities.entity_id import EntityID
 from rcrscore.properties.entity_id_property import EntityIDProperty
 from rcrscore.properties.int_list_property import IntListProperty
 from rcrscore.properties.int_property import IntProperty
+from rcrscore.properties.property import Property
 from rcrscore.urn.entity import EntityURN
 from rcrscore.urn.property import PropertyURN
 
@@ -41,25 +40,25 @@ class Human(Entity, ABC):
     )
 
   @override
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     super().set_from_properties(properties)
     for key, values in properties.items():
-      if key == URN.Property.POSITION:
-        self.position.set_value(EntityID(values))
-      elif key == URN.Property.POSITION_HISTORY:
-        self.position_history.set_value(values)
-      elif key == URN.Property.DIRECTION:
-        self.direction.set_value(values)
-      elif key == URN.Property.STAMINA:
-        self.stamina.set_value(values)
-      elif key == URN.Property.HP:
-        self.hp.set_value(values)
-      elif key == URN.Property.DAMAGE:
-        self.damage.set_value(values)
-      elif key == URN.Property.BURIEDNESS:
-        self.buriedness.set_value(values)
-      elif key == URN.Property.TRAVEL_DISTANCE:
-        self.travel_distance.set_value(values)
+      if key == PropertyURN.POSITION:
+        self.position.set_value(values.get_value())
+      elif key == PropertyURN.POSITION_HISTORY:
+        self.position_history.set_value(values.get_value())
+      elif key == PropertyURN.DIRECTION:
+        self.direction.set_value(values.get_value())
+      elif key == PropertyURN.STAMINA:
+        self.stamina.set_value(values.get_value())
+      elif key == PropertyURN.HP:
+        self.hp.set_value(values.get_value())
+      elif key == PropertyURN.DAMAGE:
+        self.damage.set_value(values.get_value())
+      elif key == PropertyURN.BURIEDNESS:
+        self.buriedness.set_value(values.get_value())
+      elif key == PropertyURN.TRAVEL_DISTANCE:
+        self.travel_distance.set_value(values.get_value())
 
   @abstractmethod
   def get_urn(self) -> EntityURN:

@@ -2,6 +2,7 @@ from typing import override
 
 from rcrscore.entities.building import Building
 from rcrscore.properties.int_property import IntProperty
+from rcrscore.properties.property import Property
 from rcrscore.urn.entity import EntityURN
 from rcrscore.urn.property import PropertyURN
 
@@ -27,17 +28,17 @@ class Refuge(Building):
     return EntityURN.REFUGE
 
   @override
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.BEDCAPACITY:
-        self.bed_capacity.set_value(values)
+        self.bed_capacity.set_value(values.get_value())
       elif key == PropertyURN.OCCUPIEDBEDS:
-        self.occupied_beds.set_value(values)
+        self.occupied_beds.set_value(values.get_value())
       elif key == PropertyURN.REFILLCAPACITY:
-        self.refill_capacity.set_value(values)
+        self.refill_capacity.set_value(values.get_value())
       elif key == PropertyURN.WAITINGLISTSIZE:
-        self.waiting_list_size.set_value(values)
+        self.waiting_list_size.set_value(values.get_value())
 
   def get_bed_capacity(self) -> IntProperty:
     return self.bed_capacity

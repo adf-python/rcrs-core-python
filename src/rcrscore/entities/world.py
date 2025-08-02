@@ -2,6 +2,7 @@ from typing import override
 
 from rcrscore.entities.entity import Entity
 from rcrscore.properties.int_property import IntProperty
+from rcrscore.properties.property import Property
 from rcrscore.urn.entity import EntityURN
 from rcrscore.urn.property import PropertyURN
 
@@ -30,16 +31,16 @@ class World(Entity):
     return EntityURN.WORLD
 
   @override
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.START_TIME:
-        self.start_time.set_value(values)
+        self.start_time.set_value(values.get_value())
       elif key == PropertyURN.LONGITUDE:
-        self.longitude.set_value(values)
+        self.longitude.set_value(values.get_value())
       elif key == PropertyURN.LATITUDE:
-        self.latitude.set_value(values)
+        self.latitude.set_value(values.get_value())
       elif key == PropertyURN.WIND_FORCE:
-        self.wind_force.set_value(values)
+        self.wind_force.set_value(values.get_value())
       elif key == PropertyURN.WIND_DIRECTION:
-        self.wind_direction.set_value(values)
+        self.wind_direction.set_value(values.get_value())

@@ -2,6 +2,7 @@ from typing import override
 
 from rcrscore.entities.area import Area
 from rcrscore.properties.int_property import IntProperty
+from rcrscore.properties.property import Property
 from rcrscore.urn.entity import EntityURN
 from rcrscore.urn.property import PropertyURN
 
@@ -42,29 +43,29 @@ class Building(Area):
     return EntityURN.BUILDING
 
   @override
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.FLOORS:
-        self.floors.set_value(values)
+        self.floors.set_value(values.get_value())
       elif key == PropertyURN.IGNITION:
-        self.ignition.set_value(values)
+        self.ignition.set_value(values.get_value())
       elif key == PropertyURN.FIERYNESS:
-        self.fieryness.set_value(values)
+        self.fieryness.set_value(values.get_value())
       elif key == PropertyURN.BROKENNESS:
-        self.brokenness.set_value(values)
+        self.brokenness.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_CODE:
-        self.building_code.set_value(values)
+        self.building_code.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_ATTRIBUTES:
-        self.attributes.set_value(values)
+        self.attributes.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_AREA_GROUND:
-        self.ground_area.set_value(values)
+        self.ground_area.set_value(values.get_value())
       elif key == PropertyURN.BUILDING_AREA_TOTAL:
-        self.total_area.set_value(values)
+        self.total_area.set_value(values.get_value())
       elif key == PropertyURN.TEMPERATURE:
-        self.temperature.set_value(values)
+        self.temperature.set_value(values.get_value())
       elif key == PropertyURN.IMPORTANCE:
-        self.importance.set_value(values)
+        self.importance.set_value(values.get_value())
 
   def is_fiery(self) -> bool:
     fieryness_value = self.fieryness.get_value()

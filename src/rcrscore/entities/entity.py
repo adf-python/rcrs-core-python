@@ -16,12 +16,12 @@ class Entity(ABC):
 
     self.register_properties([self._x, self._y])
 
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     for key, values in properties.items():
       if key == PropertyURN.X:
-        self._x.set_value(values)
+        self._x.set_value(values.get_value())
       elif key == PropertyURN.Y:
-        self._y.set_value(values)
+        self._y.set_value(values.get_value())
 
   def register_properties(self, properties: list[Property]) -> None:
     for property in properties:

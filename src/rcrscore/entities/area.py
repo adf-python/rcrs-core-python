@@ -5,6 +5,7 @@ from rcrscore.entities.entity import Entity
 from rcrscore.entities.entity_id import EntityID
 from rcrscore.properties.edge_list_property import EdgeListProperty
 from rcrscore.properties.entity_id_list_property import EntityIDListProperty
+from rcrscore.properties.property import Property
 from rcrscore.urn.property import PropertyURN
 
 
@@ -13,27 +14,27 @@ class Area(Entity):
     super().__init__(entity_id)
     self._edges: EdgeListProperty = EdgeListProperty(PropertyURN.EDGES)
     self._blockades: EntityIDListProperty = EntityIDListProperty(PropertyURN.BLOCKADES)
-    self._neighbors: list[EntityID] = []
+    self._neighbors: set[EntityID] = set()
     self._apexes: list[int] = []
     self.register_properties([self._edges, self._blockades])
 
   @override
-  def set_from_properties(self, properties) -> None:
+  def set_from_properties(self, properties: dict[PropertyURN, Property]) -> None:
     super().set_from_properties(properties)
     for key, values in properties.items():
       if key == PropertyURN.EDGES:
-        self._edges.set_value(values)
+        self._edges.set_value(values.get_value())
       elif key == PropertyURN.BLOCKADES:
-        self._blockades.set_value(values)
+        self._blockades.set_value(values.get_value())
 
-  def get_neighbors(self) -> list[EntityID]:
-    if self._neighbors != []:
+  def get_neighbors(self) -> set[EntityID]:
+    if len(self._neighbors) > 0:
       return self._neighbors
 
     if edges := self._edges.get_value():
       for edge in edges:
         if neighbor := edge.get_neighbour():
-          self._neighbors.append(neighbor)
+          self._neighbors.add(neighbor)
 
     return self._neighbors
 
