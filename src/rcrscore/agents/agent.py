@@ -39,6 +39,7 @@ class Agent(ABC):
     self.world_model: WorldModel = WorldModel()
     self.config: Config = Config()
     self.agent_id: EntityID = EntityID(-1)
+    self.logger: Logger | None = None
 
   @abstractmethod
   def precompute(self) -> None:
@@ -62,9 +63,7 @@ class Agent(ABC):
 
   def get_logger(self) -> Logger:
     if self.logger is None:
-      self.logger: Logger = get_logger(
-        self.get_name(), self.get_entity_id().get_value()
-      )
+      self.logger = get_logger(self.get_name(), self.get_entity_id().get_value())
     return self.logger
 
   def get_entity_id(self) -> EntityID:
@@ -82,7 +81,7 @@ class Agent(ABC):
     if not me:
       return None
 
-    location_entity_id = me.get_position().get_value()
+    location_entity_id = me.get_position()
     if location_entity_id is None:
       return None
 

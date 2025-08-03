@@ -17,8 +17,6 @@ class AmbulanceTeamAgent(Agent):
     return
 
   def think(self, time: int, change_set: ChangeSet, hear: MessageListProto) -> None:
-    self.get_logger().info(f"{type(hear)}: {hear}")
-
     next_location = self.random_walk()
     if next_location:
       self.get_logger().info(f"Time step: {time}, Moving to: {next_location}")
