@@ -57,6 +57,12 @@ class Area(Entity):
   def get_blockades_property(self) -> EntityIDListProperty:
     return self._blockades
 
+  def set_blockades(self, blockades: list[EntityID] | None) -> None:
+    self._blockades.set_value(blockades)
+
+  def set_edges(self, edges: list[Edge] | None) -> None:
+    self._edges.set_value(edges)
+
   def get_apexes(self) -> list[int]:
     if self._apexes != []:
       return self._apexes
@@ -67,8 +73,8 @@ class Area(Entity):
         self._apexes.append(edge.get_start_y())
     return self._apexes
 
-  def __str__(self) -> str:
-    return f"Area(id={self.get_entity_id()}, edges={self._edges}, blockades={self._blockades})"
+  def get_summary(self) -> str:
+    return f"{super().get_summary()}, edges={[str(edge) for edge in self.get_edges() or []]}, blockades={self.get_blockades()}"
 
-  def __repr__(self) -> str:
-    return f"Area(entity_id={self.get_entity_id()}, edges={self._edges}, blockades={self._blockades})"
+  def __str__(self) -> str:
+    return f"Area({self.get_summary()})"

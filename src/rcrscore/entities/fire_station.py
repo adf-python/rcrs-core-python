@@ -11,3 +11,6 @@ class FireStation(Building):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.FIRE_STATION
+
+  def __str__(self) -> str:
+    return f"FireStation({self.get_summary()})"

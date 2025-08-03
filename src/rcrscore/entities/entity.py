@@ -55,13 +55,17 @@ class Entity(ABC):
   def get_y_property(self) -> IntProperty:
     return self._y
 
+  def set_x(self, x: int | None) -> None:
+    self._x.set_value(x)
+
+  def set_y(self, y: int | None) -> None:
+    self._y.set_value(y)
+
+  def get_summary(self) -> str:
+    return f"id={self.get_entity_id()}, x={self.get_x()}, y={self.get_y()}"
+
   def __hash__(self) -> int:
     return self._entity_id.get_value()
 
   def __str__(self) -> str:
-    return (
-      f"Entity(id={self._entity_id}, x={self._x.get_value()}, y={self._y.get_value()})"
-    )
-
-  def __repr__(self) -> str:
-    return f"Entity(entity_id={self._entity_id}, x={self._x}, y={self._y}, properties={self._properties})"
+    return f"Entity({self.get_summary()})"

@@ -31,7 +31,4 @@ class Edge:
     return self._neighbor
 
   def __str__(self) -> str:
-    return f"Edge(start=({self._start[0]}, {self._start[1]}), end=({self._end[0]}, {self._end[1]}))"
-
-  def __repr__(self) -> str:
     return f"Edge(start=({self._start[0]}, {self._start[1]}), end=({self._end[0]}, {self._end[1]}), neighbor={self._neighbor})"

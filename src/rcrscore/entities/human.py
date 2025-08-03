@@ -112,3 +112,38 @@ class Human(Entity, ABC):
 
   def get_buriedness_property(self) -> IntProperty:
     return self._buriedness
+
+  def set_travel_distance(self, travel_distance: int | None) -> None:
+    self._travel_distance.set_value(travel_distance)
+
+  def set_position(self, position: EntityID | None) -> None:
+    self._position.set_value(position)
+
+  def set_position_history(self, position_history: list[int] | None) -> None:
+    self._position_history.set_value(position_history)
+
+  def set_direction(self, direction: int | None) -> None:
+    self._direction.set_value(direction)
+
+  def set_stamina(self, stamina: int | None) -> None:
+    self._stamina.set_value(stamina)
+
+  def set_hp(self, hp: int | None) -> None:
+    self._hp.set_value(hp)
+
+  def set_damage(self, damage: int | None) -> None:
+    self._damage.set_value(damage)
+
+  def set_buriedness(self, buriedness: int | None) -> None:
+    self._buriedness.set_value(buriedness)
+
+  def get_summary(self) -> str:
+    return (
+      f"Human({super().get_summary()}, position={self._position.get_value()}, hp={self._hp.get_value()}, "
+      f"stamina={self._stamina.get_value()}, damage={self._damage.get_value()}, buriedness={self._buriedness.get_value()}, "
+      f"travel_distance={self._travel_distance.get_value()}, position_history={self._position_history.get_value()}, "
+      f"direction={self._direction.get_value()})"
+    )
+
+  def __str__(self) -> str:
+    return f"Human({self.get_summary()})"

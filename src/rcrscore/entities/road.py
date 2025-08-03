@@ -11,3 +11,6 @@ class Road(Area):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.ROAD
+
+  def __str__(self) -> str:
+    return f"Road({self.get_summary()})"

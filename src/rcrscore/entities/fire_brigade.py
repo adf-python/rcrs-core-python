@@ -30,3 +30,12 @@ class FireBrigade(Human):
 
   def get_water_property(self) -> IntProperty:
     return self._water
+
+  def set_water(self, water: int | None) -> None:
+    self._water.set_value(water)
+
+  def get_summary(self) -> str:
+    return f"{super().get_summary()}, water={self.get_water()}"
+
+  def __str__(self) -> str:
+    return f"FireBrigade({self.get_summary()})"

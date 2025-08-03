@@ -11,3 +11,6 @@ class Hydrant(Road):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.HYDRANT
+
+  def __str__(self) -> str:
+    return f"Hydrant(id={self.get_entity_id()}, x={self.get_x()}, y={self.get_y()})"

@@ -11,3 +11,6 @@ class GasStation(Building):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.GAS_STATION
+
+  def __str__(self) -> str:
+    return f"GasStation({self.get_summary()})"

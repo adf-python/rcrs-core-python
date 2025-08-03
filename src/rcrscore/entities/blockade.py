@@ -51,3 +51,19 @@ class Blockade(Entity):
 
   def get_repair_cost_property(self) -> IntProperty:
     return self._repair_cost
+
+  def set_position(self, position: EntityID | None) -> None:
+    self._position.set_value(position)
+
+  def set_apexes(self, apexes: list[int] | None) -> None:
+    self._apexes.set_value(apexes)
+
+  def set_repair_cost(self, repair_cost: int | None) -> None:
+    self._repair_cost.set_value(repair_cost)
+
+  def __str__(self) -> str:
+    return (
+      f"Blockade(id={self.get_entity_id()}, x={self.get_x()}, y={self.get_y()}, "
+      f"position={self._position.get_value()}, "
+      f"repair_cost={self._repair_cost.get_value()})"
+    )

@@ -11,3 +11,6 @@ class PoliceOffice(Building):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.POLICE_OFFICE
+
+  def __str__(self) -> str:
+    return f"PoliceOffice(id={self.get_entity_id()}, x={self.get_x()}, y={self.get_y()})"

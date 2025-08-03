@@ -11,3 +11,6 @@ class PoliceForce(Human):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.POLICE_FORCE
+
+  def __str__(self) -> str:
+    return f"PoliceForce({self.get_summary()})"

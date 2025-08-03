@@ -64,21 +64,24 @@ class Refuge(Building):
   def get_waiting_list_size_property(self) -> IntProperty:
     return self._waiting_list_size
 
-  def __str__(self) -> str:
+  def set_bed_capacity(self, bed_capacity: int | None) -> None:
+    self._bed_capacity.set_value(bed_capacity)
+
+  def set_occupied_beds(self, occupied_beds: int | None) -> None:
+    self._occupied_beds.set_value(occupied_beds)
+
+  def set_refill_capacity(self, refill_capacity: int | None) -> None:
+    self._refill_capacity.set_value(refill_capacity)
+
+  def set_waiting_list_size(self, waiting_list_size: int | None) -> None:
+    self._waiting_list_size.set_value(waiting_list_size)
+
+  def get_summary(self) -> str:
     return (
-      f"Refuge(id={self.get_entity_id()}, "
-      f"bed_capacity={self._bed_capacity.get_value()}, "
-      f"occupied_beds={self._occupied_beds.get_value()}, "
-      f"refill_capacity={self._refill_capacity.get_value()}, "
-      f"waiting_list_size={self._waiting_list_size.get_value()})"
+      f"{super().get_summary()}, bed_capacity={self._bed_capacity.get_value()}, "
+      f"occupied_beds={self._occupied_beds.get_value()}, refill_capacity={self._refill_capacity.get_value()}, "
+      f"waiting_list_size={self._waiting_list_size.get_value()}"
     )
 
-  def __repr__(self) -> str:
-    return (
-      f"Refuge(entity_id={self.get_entity_id()}, "
-      f"bed_capacity={self._bed_capacity}, "
-      f"occupied_beds={self._occupied_beds}, "
-      f"refill_capacity={self._refill_capacity}, "
-      f"waiting_list_size={self._waiting_list_size}, "
-      f"properties={self.get_properties()})"
-    )
+  def __str__(self) -> str:
+    return f"Refuge({self.get_summary()})"

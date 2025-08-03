@@ -11,3 +11,6 @@ class Civilian(Human):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.CIVILIAN
+
+  def __str__(self) -> str:
+    return f"Civilian({self.get_summary()})"

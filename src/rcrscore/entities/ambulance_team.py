@@ -11,3 +11,6 @@ class AmbulanceTeam(Human):
   @override
   def get_urn(self) -> EntityURN:
     return EntityURN.AMBULANCE_TEAM
+
+  def __str__(self) -> str:
+    return f"AmbulanceTeam({self.get_summary()})"

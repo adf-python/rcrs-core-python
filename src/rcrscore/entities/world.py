@@ -74,3 +74,29 @@ class World(Entity):
 
   def get_wind_direction_property(self) -> IntProperty:
     return self._wind_direction
+
+  def set_start_time(self, start_time: int | None) -> None:
+    self._start_time.set_value(start_time)
+
+  def set_longitude(self, longitude: int | None) -> None:
+    self._longitude.set_value(longitude)
+
+  def set_latitude(self, latitude: int | None) -> None:
+    self._latitude.set_value(latitude)
+
+  def set_wind_force(self, wind_force: int | None) -> None:
+    self._wind_force.set_value(wind_force)
+
+  def set_wind_direction(self, wind_direction: int | None) -> None:
+    self._wind_direction.set_value(wind_direction)
+
+  def get_summary(self) -> str:
+    return (
+      f"{super().get_summary()}, "
+      f"start_time={self._start_time.get_value()}, "
+      f"wind_force={self._wind_force.get_value()}, "
+      f"wind_direction={self._wind_direction.get_value()}"
+    )
+
+  def __str__(self) -> str:
+    return f"World({self.get_summary()})"
