@@ -1,0 +1,100 @@
+version: "3"
+
+vars:
+  PROTO_SRC_DIR: ./src/rcrscore/proto
+  PROTO_OUT_DIR: ./src/rcrscore/proto
+
+tasks:
+  # デフォルトタスク - protocのビルドを実行
+  default:
+    cmds:
+      - task: proto:build
+
+  # Protocol Buffers関連のタスク
+  proto:build:
+    desc: "Build all Protocol Buffers files to Python"
+    cmds:
+      - task: proto:build-rcrs
+      - task: proto:build-log
+    sources:
+      - "{{.PROTO_SRC_DIR}}/*.proto"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/RCRSProto_pb2.py"
+      - "{{.PROTO_OUT_DIR}}/RCRSLogProto_pb2.py"
+
+  proto:build-rcrs:
+    desc: "Build RCRSProto.proto to Python"
+    internal: true
+    cmds:
+      - |
+        echo "Building RCRSProto.proto..."
+        protoc \
+          --python_out={{.PROTO_OUT_DIR}} \
+          --proto_path={{.PROTO_SRC_DIR}} \
+          --pyi_out={{.PROTO_OUT_DIR}} \
+          {{.PROTO_SRC_DIR}}/RCRSProto.proto
+    sources:
+      - "{{.PROTO_SRC_DIR}}/RCRSProto.proto"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/RCRSProto_pb2.py"
+
+  proto:build-log:
+    desc: "Build RCRSLogProto.proto to Python (depends on RCRSProto)"
+    internal: true
+    deps:
+      - proto:build-rcrs
+    cmds:
+      - |
+        echo "Building RCRSLogProto.proto..."
+        protoc \
+          --python_out={{.PROTO_OUT_DIR}} \
+          --proto_path={{.PROTO_SRC_DIR}} \
+          --pyi_out={{.PROTO_OUT_DIR}} \
+          {{.PROTO_SRC_DIR}}/RCRSLogProto.proto
+    sources:
+      - "{{.PROTO_SRC_DIR}}/RCRSLogProto.proto"
+      - "{{.PROTO_OUT_DIR}}/RCRSProto_pb2.py"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/RCRSLogProto_pb2.py"
+
+  proto:clean:
+    desc: "Clean generated Protocol Buffers Python files"
+    cmds:
+      - |
+        echo "Cleaning generated Protocol Buffers files..."
+        rm -f {{.PROTO_OUT_DIR}}/*_pb2.py
+        echo "Cleaned!"
+
+  proto:rebuild:
+    desc: "Clean and rebuild all Protocol Buffers files"
+    cmds:
+      - task: proto:clean
+      - task: proto:build
+
+  format:
+    desc: "Format Python code using Ruff"
+    cmds:
+      - uvx ruff format .
+
+  lint:
+    desc: "Lint Python code using Ruff"
+    cmds:
+      - uvx ruff check .
+
+  typecheck:
+    desc: "Type check Python code using MyPy"
+    cmds:
+      - uvx mypy .
+
+  precommit:
+    desc: "Run all checks before commit"
+    cmds:
+      - task: format
+      - task: lint
+      - task: typecheck
+
+  # ヘルプ
+  help:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
