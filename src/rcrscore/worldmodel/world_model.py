@@ -105,12 +105,14 @@ class WorldModel:
     if isinstance(entity, Area):
       apexes = entity.get_apexes()
     elif isinstance(entity, Blockade):
-      apexes = entity.get_apexes().get_value()
-      if apexes is None:
+      blockade_apexes = entity.get_apexes()
+      if blockade_apexes is None:
         return None
+      apexes.extend(blockade_apexes)
     elif isinstance(entity, Human):
-      apexes = []
       human_x, human_y = entity.get_location()
+      if human_x is None or human_y is None:
+        return None
       apexes.append(human_x)
       apexes.append(human_y)
     else:
@@ -165,18 +167,12 @@ class WorldModel:
 
     result = []
     for entity_id in entities_ids:
-      result.append(self.get_entity(EntityID(entity_id)))
-
+      if entity := self.get_entity(EntityID(entity_id)):
+        result.append(entity)
     return result
 
   def get_objects_in_range(self, entity: Entity, range: float) -> list[Entity]:
-    location = entity.get_location()
-
-    if location is None:
-      return []
-
-    x = location[0].get_value()
-    y = location[1].get_value()
+    x, y = entity.get_location()
 
     if x is None or y is None:
       return []
