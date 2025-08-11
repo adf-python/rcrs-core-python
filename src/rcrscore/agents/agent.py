@@ -39,7 +39,7 @@ class Agent(ABC):
     self.world_model: WorldModel = WorldModel()
     self.config: Config = Config()
     self.agent_id: EntityID = EntityID(-1)
-    self.logger: Logger | None = None
+    self._logger: Logger = get_logger(self.get_name(), self.get_entity_id().get_value())
 
   @abstractmethod
   def precompute(self) -> None:
@@ -61,10 +61,9 @@ class Agent(ABC):
   def get_urn(self) -> EntityURN:
     raise NotImplementedError("get_urn method must be implemented by subclass")
 
-  def get_logger(self) -> Logger:
-    if self.logger is None:
-      self.logger = get_logger(self.get_name(), self.get_entity_id().get_value())
-    return self.logger
+  @property
+  def logger(self) -> Logger:
+    return self._logger
 
   def get_entity_id(self) -> EntityID:
     return self.agent_id
@@ -97,9 +96,7 @@ class Agent(ABC):
       case KAConnectError():
         self.handle_connect_error(c_msg)
       case _:
-        self.get_logger().warning(
-          f"Unknown control message: {c_msg.__class__.__name__}"
-        )
+        self.logger.warning(f"Unknown control message: {c_msg.__class__.__name__}")
 
   def handle_sense(self, msg: KASense) -> None:
     entity_id: EntityID = msg.agent_id
@@ -108,7 +105,7 @@ class Agent(ABC):
     hear: MessageListProto = msg.hear
 
     if entity_id != self.get_entity_id():
-      self.get_logger().warning("agent received a message which not belongs to him")
+      self.logger.warning("agent received a message which not belongs to him")
       return
 
     self.world_model.merge(change_set)
@@ -116,16 +113,17 @@ class Agent(ABC):
 
   def handle_connect_ok(self, msg: KAConnectOK) -> None:
     self.agent_id = EntityID(msg.agent_id)
+    self._logger = get_logger(self.get_name(), self.get_entity_id().get_value())
     self.config = msg.config
     self.world_model.add_entities(msg.world)
     self.send_acknowledge(msg.request_id)
     self.post_connect()
     if self.precompute_flag:
-      self.get_logger().info("self.precompute_flag: {0}".format(self.precompute_flag))
+      self.logger.info("self.precompute_flag: {0}".format(self.precompute_flag))
       self.precompute()
 
   def handle_connect_error(self, msg: KAConnectError) -> None:
-    self.get_logger().warning("failed {0} : {1}".format(msg.request_id, msg.reason))
+    self.logger.warning("failed {0} : {1}".format(msg.request_id, msg.reason))
     sys.exit(1)
 
   def set_send_msg(self, connection_send_func: Callable[[MessageProto], None]) -> None:

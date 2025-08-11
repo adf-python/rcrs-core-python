@@ -306,7 +306,9 @@ class Launcher:
             time.sleep(config.start_delay)
 
         except Exception as e:
-          self.logger.error(f"Failed to launch {agent_type.name} agent: {e}")
+          self.logger.error(
+            f"Failed to launch {agent_type.name} agent: {e}", stack_info=True
+          )
 
     return processes
 
