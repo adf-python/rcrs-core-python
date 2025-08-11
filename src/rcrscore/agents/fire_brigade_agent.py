@@ -19,10 +19,10 @@ class FireBrigadeAgent(Agent):
   def think(self, time: int, change_set: ChangeSet, hear: MessageListProto) -> None:
     next_location = self.random_walk()
     if next_location:
-      self.get_logger().info(f"Time step: {time}, Moving to: {next_location}")
+      self.logger.info(f"Time step: {time}, Moving to: {next_location}")
       self.send_move(time, [next_location])
     else:
-      self.get_logger().info(f"Time step: {time}, No move, resting.")
+      self.logger.info(f"Time step: {time}, No move, resting.")
       self.send_rest(time)
 
   def random_walk(self) -> EntityID | None:
