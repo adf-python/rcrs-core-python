@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "shima004", email = "yellow030408@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "protobuf>=6.31.1",
     "rtree>=1.4.0",
