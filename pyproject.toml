@@ -1,12 +1,12 @@
 [project]
 name = "rcrscore"
-version = "0.2.2"
+version = "0.2.3"
 description = "Add your description here"
 readme = "README.md"
 authors = [
     { name = "shima004", email = "yellow030408@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "protobuf>=6.31.1",
     "rtree>=1.4.0",
@@ -22,6 +22,8 @@ dev = [
     "ruff>=0.12.5",
 ]
 
+[tool.uv]
+exclude-newer = "1 week"
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
